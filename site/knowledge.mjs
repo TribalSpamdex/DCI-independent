@@ -486,4 +486,305 @@ knowledge.push(...[
     ]
   }
 ]);
+knowledge.push(...[
+  {
+    "id": "darts-focus-review",
+    "skill": [
+      "scoring",
+      "doubles",
+      "trebles",
+      "grouping",
+      "singles",
+      "bull"
+    ],
+    "principle": "Compare attentional cues rather than impose one.",
+    "level": "darts-specific systematic review",
+    "source": "Feng, Shangguan & Zhu (2026)",
+    "url": "https://doi.org/10.3389/fpsyg.2026.1923857",
+    "support": "19 studies, mixed context-dependent effects; limited transfer evidence.",
+    "approach": "attention cue",
+    "conditions": [
+      "Relevant individual investigation"
+    ],
+    "contraindications": [
+      "Pain; unsupported major change"
+    ],
+    "alternatives": [
+      "Maintain existing practice",
+      "Controlled comparison"
+    ],
+    "investigation": "Use matched outcome measures.",
+    "intervention": "Trial one cue against the usual cue and check retention.",
+    "expected": "More informative individual evidence, no guaranteed improvement.",
+    "limitations": "Mostly novice participants; heterogeneous designs.",
+    "related": [
+      "external-focus",
+      "attention-null"
+    ]
+  },
+  {
+    "id": "professional-pressure",
+    "skill": [
+      "pressure",
+      "checkout",
+      "doubles"
+    ],
+    "principle": "Do not presume competition pressure necessarily reduces accuracy.",
+    "level": "professional darts observational study",
+    "source": "Ötting et al. (2020)",
+    "url": "https://doi.org/10.1371/journal.pone.0228870",
+    "support": "32,274 tournament throws; no overall support for choking or excelling under measured pressure.",
+    "approach": "routine",
+    "conditions": [
+      "Relevant individual investigation"
+    ],
+    "contraindications": [
+      "Pain; unsupported major change"
+    ],
+    "alternatives": [
+      "Maintain existing practice",
+      "Controlled comparison"
+    ],
+    "investigation": "Use matched outcome measures.",
+    "intervention": "Compare individual matched competition results.",
+    "expected": "More informative individual evidence, no guaranteed improvement.",
+    "limitations": "Elite data and selected pressure measures may not generalise.",
+    "related": [
+      "context",
+      "pre-performance-routine"
+    ]
+  },
+  {
+    "id": "practice-interference-caution",
+    "skill": [
+      "switching",
+      "scoring",
+      "doubles",
+      "checkout",
+      "trebles",
+      "singles"
+    ],
+    "principle": "Choose blocked or varied practice according to the learning task.",
+    "level": "cross-task critical systematic review",
+    "source": "Contextual Interference Learning (2024)",
+    "url": "https://doi.org/10.1007/s10648-024-09892-z",
+    "support": "Review examines limitations of generalising random-versus-blocked practice effects.",
+    "approach": "practice order",
+    "conditions": [
+      "Relevant individual investigation"
+    ],
+    "contraindications": [
+      "Pain; unsupported major change"
+    ],
+    "alternatives": [
+      "Maintain existing practice",
+      "Controlled comparison"
+    ],
+    "investigation": "Use matched outcome measures.",
+    "intervention": "Compare schedules on a common later test.",
+    "expected": "More informative individual evidence, no guaranteed improvement.",
+    "limitations": "Not a darts-specific prescription.",
+    "related": [
+      "challenge-point",
+      "retention"
+    ]
+  },
+  {
+    "id": "professional-match-practice-part",
+    "skill": [
+      "checkout",
+      "setup",
+      "pressure",
+      "scoring",
+      "switching"
+    ],
+    "principle": "Match play is a legitimate practice option.",
+    "level": "professional self-reported practice",
+    "source": "John Part interview, Darts1",
+    "url": "https://www.darts1.de/interviews/part3e.php",
+    "support": "Part described partner practice rather than a fixed schedule.",
+    "approach": "practice order",
+    "conditions": [
+      "Relevant individual investigation"
+    ],
+    "contraindications": [
+      "Pain; unsupported major change"
+    ],
+    "alternatives": [
+      "Maintain existing practice",
+      "Controlled comparison"
+    ],
+    "investigation": "Use matched outcome measures.",
+    "intervention": "Use match application alongside measurable benchmarks.",
+    "expected": "More informative individual evidence, no guaranteed improvement.",
+    "limitations": "Historical individual preference, not a trial.",
+    "related": [
+      "retention",
+      "context"
+    ]
+  },
+  {
+    "id": "professional-match-practice-wade",
+    "skill": [
+      "checkout",
+      "pressure",
+      "scoring"
+    ],
+    "principle": "Partner practice may help engagement.",
+    "level": "professional self-reported practice",
+    "source": "James Wade interview, Darts1",
+    "url": "https://www.darts1.de/interviews/wade4e.php",
+    "support": "Wade described regular competitive partner-based 501 practice.",
+    "approach": "practice order",
+    "conditions": [
+      "Relevant individual investigation"
+    ],
+    "contraindications": [
+      "Pain; unsupported major change"
+    ],
+    "alternatives": [
+      "Maintain existing practice",
+      "Controlled comparison"
+    ],
+    "investigation": "Use matched outcome measures.",
+    "intervention": "Try match-like tasks when solo engagement or transfer is a concern.",
+    "expected": "More informative individual evidence, no guaranteed improvement.",
+    "limitations": "Reported duration is not a recommended dose.",
+    "related": [
+      "professional-match-practice-part"
+    ]
+  },
+  {
+    "id": "professional-doubles-bunting",
+    "skill": [
+      "doubles",
+      "bull",
+      "checkout"
+    ],
+    "principle": "Combine preferred finishes with broad coverage.",
+    "level": "professional coaching opinion",
+    "source": "Stephen Bunting interview, DartsNews",
+    "url": "https://dartsnews.com/pdc/if-you-cant-hit-a-double-it-doesnt-matter-how-big-you-score-stephen-buntings-golden-rules-for-finishing-under-pressure",
+    "support": "Describes favourite-double and all-board practice.",
+    "approach": "practice allocation",
+    "conditions": [
+      "Relevant individual investigation"
+    ],
+    "contraindications": [
+      "Pain; unsupported major change"
+    ],
+    "alternatives": [
+      "Maintain existing practice",
+      "Controlled comparison"
+    ],
+    "investigation": "Use matched outcome measures.",
+    "intervention": "Measure all-board targets; add preferred-double work as appropriate.",
+    "expected": "More informative individual evidence, no guaranteed improvement.",
+    "limitations": "Personal experience, not a validated threshold.",
+    "related": [
+      "route-preference",
+      "retention"
+    ]
+  },
+  {
+    "id": "coach-balanced-routine",
+    "skill": [
+      "scoring",
+      "doubles",
+      "checkout",
+      "pressure",
+      "singles"
+    ],
+    "principle": "Choose sustainable practice volume and variety.",
+    "level": "commercial coaching guidance",
+    "source": "Darts Corner practice guide",
+    "url": "https://www.dartscorner.com/blogs/how-to/how-to-practice-darts",
+    "support": "Guide discusses sustainable routines and separate scoring, doubles and checkout work.",
+    "approach": "practice allocation",
+    "conditions": [
+      "Relevant individual investigation"
+    ],
+    "contraindications": [
+      "Pain; unsupported major change"
+    ],
+    "alternatives": [
+      "Maintain existing practice",
+      "Controlled comparison"
+    ],
+    "investigation": "Use matched outcome measures.",
+    "intervention": "Keep varied practice and evaluate individual response.",
+    "expected": "More informative individual evidence, no guaranteed improvement.",
+    "limitations": "Commercial guidance, no independent efficacy estimate.",
+    "related": [
+      "challenge-point",
+      "context"
+    ]
+  },
+  {
+    "id": "coach-structured-alternative",
+    "skill": [
+      "scoring",
+      "doubles",
+      "checkout",
+      "pressure"
+    ],
+    "principle": "Structured measurable practice is an alternative to recreational play.",
+    "level": "coaching opinion",
+    "source": "The Darts Coach, Practice Routines (2026)",
+    "url": "https://thedartscoach.com/practice-routines/",
+    "support": "Author favours deliberate routines over unstructured or recreational throwing.",
+    "approach": "practice order",
+    "conditions": [
+      "Relevant individual investigation"
+    ],
+    "contraindications": [
+      "Pain; unsupported major change"
+    ],
+    "alternatives": [
+      "Maintain existing practice",
+      "Controlled comparison"
+    ],
+    "investigation": "Use matched outcome measures.",
+    "intervention": "Compare structured drills with match application; no proprietary routines copied.",
+    "expected": "More informative individual evidence, no guaranteed improvement.",
+    "limitations": "Promotional anecdote is not causal evidence.",
+    "related": [
+      "professional-match-practice-part",
+      "retention"
+    ]
+  },
+  {
+    "id": "coach-individual-development",
+    "skill": [
+      "grouping",
+      "pressure",
+      "scoring",
+      "doubles"
+    ],
+    "principle": "Investigate the individual rather than copy a single intervention.",
+    "level": "professional case account",
+    "source": "Sky Sports interview with Devon Petersen and Wayne Mardle (2020)",
+    "url": "https://www.skysports.com/darts/news/12090912/world-grand-prix-2020-devon-petersen-and-wayne-mardle-on-the-art-of-coaching-in-darts",
+    "support": "Case describes work across several aspects of development.",
+    "approach": "routine",
+    "conditions": [
+      "Relevant individual investigation"
+    ],
+    "contraindications": [
+      "Pain; unsupported major change"
+    ],
+    "alternatives": [
+      "Maintain existing practice",
+      "Controlled comparison"
+    ],
+    "investigation": "Use matched outcome measures.",
+    "intervention": "Separate potential technique, routine and equipment changes.",
+    "expected": "More informative individual evidence, no guaranteed improvement.",
+    "limitations": "Multiple simultaneous changes prevent causal attribution.",
+    "related": [
+      "single-variable",
+      "motor-strategies"
+    ]
+  }
+]);
 export function relevant(skill){return knowledge.filter(x=>x.skill.includes(skill))}
