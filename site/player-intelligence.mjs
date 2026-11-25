@@ -2,6 +2,7 @@ import {assessments,SKILLS,plan} from './engine.mjs';
 import {robustTrend,matchedContext,exposureSummary,dayGap,dayValid} from './context.mjs';
 import {library,variant,difficultyDecision} from './training.mjs';
 import {relevant} from './knowledge.mjs';
+import {dailyDistribution} from './learning.mjs';
 export const EQUIPMENT_FIELDS=['weight','barrel shape','grip position','grip intensity','balance point','point length','stem length','flight shape','integrated flight','entry angle'];
 export function equipmentInvestigation({changed=[],discomfort=false,measuredDecline=false}={}){
  if(!Array.isArray(changed)||new Set(changed).size!==changed.length||!changed.every(x=>EQUIPMENT_FIELDS.includes(x))||typeof discomfort!=='boolean'||typeof measuredDecline!=='boolean')throw Error('Invalid equipment evidence');
@@ -38,7 +39,7 @@ export function evidenceReview(memory,day){
  hypotheses.push({id:'allocation',status:exposure.adequacy==='exploratory'&&share<.1?'supported-as-possibility':'unresolved',support:share===null?[]:['Recorded practice share '+Math.round(share*100)+'%'],against:exposure.adequacy==='exploratory'&&share>=.1?['Low exposure not apparent in recorded minutes']:[],unknown:['Whether practice logging is complete','Whether the drill transfers to the assessed skill']});
  for(const [id,x] of [['fatigue',fatigue],['pressure',pressure],['confidence',confidence]])hypotheses.push({id,status:x.status==='association'&&x.change<0?'supported-as-possibility':'unresolved',support:x.status==='association'&&x.change<0?['Lower matched performance in reported condition']:[],against:x.status==='association'&&x.change>0?['Observed association in opposite direction']:[],unknown:['Other contextual differences','Causal direction']});
  hypotheses.push({id:'technique-equipment',status:'unresolved',support:[],against:[],unknown:['Controlled comparison','Mechanics observation']});
- profiles.push({skill:a.skill,context:a.context,protocol:a.protocol,trend,shortTrend:a.trend.status,learning,hypotheses,knowledge:relevant(a.skill).map(k=>k.id),fatigue,pressure,confidence});
+ profiles.push({distribution:dailyDistribution(rows),skill:a.skill,context:a.context,protocol:a.protocol,trend,shortTrend:a.trend.status,learning,hypotheses,knowledge:relevant(a.skill).map(k=>k.id),fatigue,pressure,confidence});
  }
  const issues=profiles.filter(p=>p.trend.status==='declining').map(p=>{
  const conflicts=profiles.filter(q=>q.skill===p.skill&&q!==p&&q.trend.status==='improving').map(q=>({context:q.context,protocol:q.protocol}));
