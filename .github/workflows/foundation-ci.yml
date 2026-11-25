@@ -23,7 +23,7 @@ jobs:
         run: |
           python -m http.server 8765 --bind 127.0.0.1 --directory site &
           server=$!
-          trap 'kill "$server"' EXIT
+          trap 'kill "$server" 2>/dev/null || true' EXIT
           for i in $(seq 1 20); do curl -fsS http://127.0.0.1:8765/index.html >/dev/null && break; sleep 1; done
           python tests/browser.py
-          DCI_BROWSER=webkit python tests/browser.py
+          DCI_BROWSER=webkit DCI_SERVER_PID="$server" python tests/browser.py
