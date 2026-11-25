@@ -13,6 +13,9 @@ V0.0.7 and V0.1.0 remain recoverable in archive branches. V0.2.0 is model-free, 
 - 24 knowledge entries total: nine new research/professional sources checked against accessible text. Prior knowledge entries retained, not all re-audited. Coaching anecdotes and commercial material labelled separately from empirical evidence. No proprietary routines copied.
 - Backward-compatible validation of new records, stale-window write protection and scoped versioned assets using import map. Browser storage is not a durable backup. Cross-window checks reduce but do not eliminate simultaneous-write races.
 
+## Confirmation safeguard
+A noisy synthetic population exposed unnecessary focus on stable and recovered players. New recent-subperiod and persistent-window confirmation gates reduce premature workload changes. Thresholds are provisional and scenario-dependent; investigation can still be appropriate even when focus is not. A separate seeded 10,000-player holdout is included in regression.
+
 ## Tests
 node --test tests/foundation.test.mjs. Browser: serve site/ on port 8765 and run python tests/browser.py (Chromium), DCI_BROWSER=webkit python tests/browser.py (WebKit). New seeded scenarios add 1,000 short diagnostic profiles to the prior 1,000 one-year and 500 two-year synthetic player histories. These are simulations of decision logic, not full daily play or efficacy proof.
 
