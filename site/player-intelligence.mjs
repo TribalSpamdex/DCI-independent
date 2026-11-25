@@ -12,7 +12,9 @@ export function equipmentInvestigation({changed=[],discomfort=false,measuredDecl
 }
 export function mentalSupport(readiness){
  if(!readiness.length)return {decision:'ask',action:'Optional: record fatigue, pressure and confidence alongside comparable benchmarks.'};
- const recent=[...readiness].sort((a,b)=>b.day.localeCompare(a.day))[0];
+ const latest=[...readiness].sort((a,b)=>b.day.localeCompare(a.day))[0].day;
+ const current=readiness.filter(x=>x.day===latest);
+ const recent={pain:current.some(x=>x.pain),fatigue:current.some(x=>x.fatigue==='high')?'high':'normal',pressure:current.some(x=>x.pressure==='high')?'high':'normal',confidence:current.some(x=>x.confidence==='low')?'low':'normal'};
  if(recent.pain)return {decision:'stop',action:'Avoid the aggravating activity and seek qualified advice if pain persists or is significant.'};
  if(recent.fatigue==='high')return {decision:'reduce-load',action:'Consider shorter low-pressure practice or rest today. Do not downgrade ability from self-report.'};
  if(recent.pressure==='high'||recent.confidence==='low')return {decision:'routine-trial',action:'Try a brief repeatable pre-throw routine and a controllable process goal; compare it with your normal routine.'};
@@ -25,7 +27,7 @@ export function learningHistory(memory,skill,protocol){
 }
 export function evidenceReview(memory,day){
  if(!dayValid(day))throw Error('Invalid report date');
- const recentReady=(memory.readiness??[]).filter(x=>dayGap(x.day,day)>=0&&dayGap(x.day,day)<28);
+ const recentReady=(memory.readiness??[]).filter(x=>dayGap(x.day,day)>=0&&dayGap(x.day,day)<56);
  const exposure=exposureSummary(memory,day),profiles=[];
  for(const a of assessments({...memory,observations:memory.observations.filter(o=>dayGap(o.day,day)>=0)})){
  const rows=memory.observations.filter(o=>o.skill===a.skill&&o.context===a.context&&o.protocol===a.protocol&&dayGap(o.day,day)>=0&&dayGap(o.day,day)<56);
@@ -51,7 +53,7 @@ export function evidenceReview(memory,day){
  return {day,profiles,issues,focus:focus?.skill??null,focusProtocol:focus?.protocol??null,wellbeing,exposure,decision:wellbeing.decision==='stop'?'stop':wellbeing.decision==='reduce-load'?'reduce-load':focus?'consider-focus':issues.length?'investigate':'balanced',limitations:['Priority is magnitude relative to provisional practical threshold, not a scientific probability.','Long-window assessment is intentionally conservative; it does not replace a fixed benchmark.','Reported conditions are associations, never diagnoses.']};
 }
 export function drillPlan(memory,day,focus=null){
- const records=memory.difficulty??[],chosen=plan(focus),extras=['firstNine','trebles','pressure','grouping'];
+ const records=memory.difficulty??[],chosen=plan(focus),extras=['switching','firstNine','trebles','pressure','grouping'];
  // Rotate optional skills without claiming equivalence of their measurements.
  const rotation=Math.floor(Date.parse(day)/86400000)%extras.length;
  const optional=extras[(rotation+extras.length)%extras.length];
