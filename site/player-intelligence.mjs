@@ -70,7 +70,10 @@ export function drillPlan(memory,day,focus=null){
 export function selectCoaching(memory,base,day){
  const review=evidenceReview(memory,day);
  if(['stop','reduce-load'].includes(review.decision))return {...base,decision:review.decision,focus:null,plan:[],review};
- const eligible=base.issues.filter(i=>i.action==='temporary-focus').map(i=>{
+ const existing=[...base.issues];
+ for(const i of review.issues){if(i.action!=='candidate-focus'||existing.some(x=>x.skill===i.skill&&x.context===i.context&&x.protocol===i.protocol)||memory.interventions.some(x=>x.skill===i.skill&&['accepted','unsuccessful'].includes(x.status)))continue;
+ existing.push({skill:i.skill,context:i.context,protocol:i.protocol,evidence:i.trend,hypotheses:i.hypotheses,knowledge:i.knowledge,action:'temporary-focus',review:'Repeat the same benchmark on later days and evaluate adherence.'})}
+ const eligible=existing.filter(i=>i.action==='temporary-focus').map(i=>{
  const p=review.profiles.find(q=>q.skill===i.skill&&q.context===i.context&&q.protocol===i.protocol);
  const longIssue=review.issues.find(q=>q.skill===i.skill&&q.context===i.context&&q.protocol===i.protocol);
  const recent=p?.trend.recent;
@@ -79,6 +82,6 @@ export function selectCoaching(memory,base,day){
  return {issue:i,eligible:!stale&&!contradictory,priority:Math.abs(i.evidence.change)/(['scoring','firstNine'].includes(i.skill)?3:.05)};
  }).filter(x=>x.eligible).sort((a,b)=>b.priority-a.priority||a.issue.skill.localeCompare(b.issue.skill)||a.issue.protocol.localeCompare(b.issue.protocol));
  const candidate=eligible[0]?.issue;
- const issues=base.issues.map(i=>({...i,action:eligible.some(x=>x.issue===i)?'temporary-focus':'investigate'}));
+ const issues=existing.map(i=>({...i,action:eligible.some(x=>x.issue===i)?'temporary-focus':'investigate'}));
  return {...base,issues,focus:candidate?.skill??null,focusProtocol:candidate?.protocol??null,focusContext:candidate?.context??null,decision:candidate?'temporary-focus':issues.length?'investigate':'balanced',plan:plan(candidate?.skill),review};
 }
