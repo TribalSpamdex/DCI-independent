@@ -1,4 +1,4 @@
-import {SKILLS,summarise,mean,sd} from './engine.mjs';
+import {SKILLS,summarise,mean,sd,plan} from './engine.mjs';
 import {dayValid,dayGap} from './context.mjs';
 import {targetSummaries} from './target-evidence.mjs';
 export const CHANGE_FIELDS=['equipment','technique','routine','practice schedule','environment','injury or discomfort'];
@@ -72,5 +72,5 @@ export function deepenReport(m,report,day){
  const selected=issues.find(i=>i.skill===report.focus&&i.protocol===report.focusProtocol&&i.context===report.focusContext&&i.action==='temporary-focus');
  const candidate=selected??issues.filter(i=>i.action==='temporary-focus').sort((a,b)=>Math.abs(b.evidence.change)/(['scoring','firstNine'].includes(b.skill)?3:.05)-Math.abs(a.evidence.change)/(['scoring','firstNine'].includes(a.skill)?3:.05)||a.skill.localeCompare(b.skill))[0];
  const safe=['stop','reduce-load'].includes(report.decision)||comfort;
- return {...report,issues,decision:comfort?'stop':safe?report.decision:candidate?'temporary-focus':issues.length?'investigate':'balanced',focus:safe?null:candidate?.skill??null,focusProtocol:safe?null:candidate?.protocol??null,focusContext:safe?null:candidate?.context??null,plan:safe?[]:report.plan,review:comfort?{...report.review,wellbeing:{decision:'stop',action:'Stop throwing if uncomfortable or painful; seek qualified advice for persistent or significant pain.'}}:report.review};
+ return {...report,issues,decision:comfort?'stop':safe?report.decision:candidate?'temporary-focus':issues.length?'investigate':'balanced',focus:safe?null:candidate?.skill??null,focusProtocol:safe?null:candidate?.protocol??null,focusContext:safe?null:candidate?.context??null,plan:safe?[]:plan(candidate?.skill),review:comfort?{...report.review,wellbeing:{decision:'stop',action:'Stop throwing if uncomfortable or painful; seek qualified advice for persistent or significant pain.'}}:report.review};
 }
