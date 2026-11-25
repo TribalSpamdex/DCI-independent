@@ -38,7 +38,7 @@ export function drillOptions(skill,level){
 export function validateSession(s){
  if(!s||typeof s.id!=='string'||!s.id.trim()||s.id.length>100||!dayValid(s.day)||!Number.isInteger(s.number)||s.number<1||s.number>3||!['completed','partial'].includes(s.status)||!Array.isArray(s.segments)||s.segments.length<1||s.segments.length>15)throw Error('Invalid training session');
  const seen=new Set();for(const g of s.segments){if(!g||!['warmup',...SKILLS].includes(g.skill)||typeof g.drill!=='string'||!g.drill.trim()||g.drill.length>100||!Number.isInteger(g.minutes)||g.minutes<1||g.minutes>60||seen.has(g.skill))throw Error('Invalid session segment');if(g.skill!=='warmup'&&!DRILLS.some(d=>d.id===g.drill&&d.skill===g.skill))throw Error('Unknown drill');seen.add(g.skill)}
- if(s.segments.reduce((a,b)=>a+b.minutes,0)>60)throw Error('Session exceeds 60 minutes');return s;
+ const minutes=s.segments.reduce((a,b)=>a+b.minutes,0);if(minutes>60||s.status==='completed'&&minutes!==60||s.status==='partial'&&minutes===60)throw Error('Invalid completed session duration');return s;
 }
 export function logSession(m,s){s=validateSession(s);const rows=m.sessions??[];if(rows.some(x=>x.id===s.id||x.day===s.day&&x.number===s.number))throw Error('Duplicate training session');return {...m,sessions:[...rows,s]}}
 export function historyMinutes(m,day){const rows=(m.sessions??[]).filter(x=>dayGap(x.day,day)>=0&&dayGap(x.day,day)<7);return {minutes:rows.reduce((n,s)=>n+s.segments.reduce((a,g)=>a+g.minutes,0),0),skills:Object.fromEntries(SKILLS.map(skill=>[skill,rows.reduce((n,s)=>n+s.segments.filter(g=>g.skill===skill).reduce((a,g)=>a+g.minutes,0),0)])),days:new Set(rows.map(s=>s.day)).size}}
@@ -46,6 +46,7 @@ export function trainingRecommendation(m,report,day,active,number=1){
  if(!dayValid(day)||!Number.isInteger(number)||number<1||number>3)throw Error('Invalid training date/session');
  if(['stop','reduce-load'].includes(report.decision))return {mode:report.decision,segments:[],reason:'Readiness takes priority.'};
  const previous=(m.sessions??[]).filter(s=>s.day===day),used=new Set(previous.flatMap(s=>s.segments.map(g=>g.drill))),history=historyMinutes(m,day);
+ if(number>1&&!previous.some(s=>s.number===number-1))return {mode:'not-yet-available',segments:[],reason:'Record the previous session before planning another.'};
  if(previous.some(s=>s.number===number))return {mode:'already-recorded',segments:[],reason:'This session has already been logged.'};
  const focus=active.mode==='accepted-temporary-focus'?m.interventions.find(i=>i.id===active.intervention)?.skill:null;
  const base=plan(focus);
