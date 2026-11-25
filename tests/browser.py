@@ -1,0 +1,34 @@
+import json
+from playwright.sync_api import sync_playwright
+with sync_playwright() as p:
+    browser=p.chromium.launch()
+    ctx=browser.new_context(viewport={"width":390,"height":844}, is_mobile=True, has_touch=True)
+    page=ctx.new_page()
+    errors=[]
+    page.on("pageerror",lambda e: errors.append(str(e)))
+    page.goto("http://127.0.0.1:8765/index.html")
+    page.locator("#version").wait_for()
+    page.locator("#fact input[name=key]").fill("grip")
+    page.locator("#fact input[name=value]").fill("middle")
+    page.locator("#fact button").click()
+    assert page.locator("#facts").inner_text().find("middle")>=0
+    page.reload()
+    assert page.locator("#facts").inner_text().find("middle")>=0
+    page.locator("#demo").click()
+    assert "SIMULATION ONLY" in page.locator("#report").inner_text()
+    assert "temporary-focus" in page.locator("#report").inner_text()
+    data=page.evaluate("JSON.parse(localStorage.getItem('DCI-independent:foundation:v1'))")
+    assert len(data["observations"])==0
+    page.locator("#checkout button").click()
+    assert "legal scoring routes" in page.locator("#routes").inner_text()
+    page.locator("#analyse").click()
+    assert "balanced" in page.locator("#report").inner_text()
+    page.evaluate("navigator.serviceWorker.ready")
+    page.wait_for_function("navigator.serviceWorker.controller !== null")
+    ctx.set_offline(True)
+    page.reload()
+    page.locator("#analyse").click()
+    assert "balanced" in page.locator("#report").inner_text()
+    assert not errors,errors
+    browser.close()
+print("Mobile viewport persistence, isolation, checkout and offline smoke test passed")
