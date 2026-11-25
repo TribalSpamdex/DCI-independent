@@ -18,7 +18,7 @@ jobs:
       - name: Browser tooling
         run: |
           python -m pip install playwright==1.51.0
-          python -m playwright install --with-deps chromium
+          python -m playwright install --with-deps chromium webkit
       - name: Browser smoke and offline checks
         run: |
           python -m http.server 8765 --bind 127.0.0.1 --directory site &
@@ -26,3 +26,4 @@ jobs:
           trap 'kill "$server"' EXIT
           for i in $(seq 1 20); do curl -fsS http://127.0.0.1:8765/index.html >/dev/null && break; sleep 1; done
           python tests/browser.py
+          DCI_BROWSER=webkit python tests/browser.py
