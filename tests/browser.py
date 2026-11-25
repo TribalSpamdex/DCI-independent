@@ -1,4 +1,4 @@
-import json, os
+import json, os, signal, socket, time
 from playwright.sync_api import sync_playwright
 with sync_playwright() as p:
     browser=getattr(p,os.getenv('DCI_BROWSER','chromium')).launch()
@@ -92,8 +92,24 @@ with sync_playwright() as p:
     assert "active" in page.locator("#trials").inner_text()
     page.evaluate("navigator.serviceWorker.ready")
     page.wait_for_function("navigator.serviceWorker.controller !== null")
-    ctx.set_offline(True)
-    page.reload()
+    if os.getenv("DCI_BROWSER")=="webkit":
+        # Playwright issue #42775: set_offline can reject service-worker responses
+        # even when the worker returns literal HTML. Stop the actual local origin.
+        assert page.evaluate("caches.open('DCI-independent:foundation:0.2.0').then(c=>c.match('./index.html')).then(Boolean)")
+        pid=int(os.environ["DCI_SERVER_PID"])
+        os.kill(pid,signal.SIGTERM)
+        for _ in range(50):
+            with socket.socket() as sock:
+                sock.settimeout(.2)
+                if sock.connect_ex(("127.0.0.1",8765))!=0:
+                    break
+            time.sleep(.1)
+        else:
+            raise AssertionError("Local origin did not stop")
+        page.goto("http://127.0.0.1:8765/index.html?v=0.2.0&offline-test=1")
+    else:
+        ctx.set_offline(True)
+        page.reload()
     page.locator("#analyse").click()
     assert "balanced" in page.locator("#report").inner_text()
     page.locator("#demo").click()
