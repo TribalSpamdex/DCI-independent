@@ -65,3 +65,19 @@ export function drillPlan(memory,day,focus=null){
  const decision=difficultyDecision(records,s.skill,s.skill+'-core',current,day);
  return {...s,drill:variant(s.skill,decision.next),progression:decision}});
 }
+
+export function selectCoaching(memory,base,day){
+ const review=evidenceReview(memory,day);
+ if(['stop','reduce-load'].includes(review.decision))return {...base,decision:review.decision,focus:null,plan:[],review};
+ const eligible=base.issues.filter(i=>i.action==='temporary-focus').map(i=>{
+ const p=review.profiles.find(q=>q.skill===i.skill&&q.context===i.context&&q.protocol===i.protocol);
+ const longIssue=review.issues.find(q=>q.skill===i.skill&&q.context===i.context&&q.protocol===i.protocol);
+ const recent=p?.trend.recent;
+ const stale=!recent||recent.days<5||dayGap(recent.daily.at(-1).day,day)>7;
+ const contradictory=p?.trend.status==='improving'||longIssue?.action==='investigate'||p?.hypotheses.some(h=>['fatigue','pressure','confidence'].includes(h.id)&&h.status==='supported-as-possibility');
+ return {issue:i,eligible:!stale&&!contradictory,priority:Math.abs(i.evidence.change)/(['scoring','firstNine'].includes(i.skill)?3:.05)};
+ }).filter(x=>x.eligible).sort((a,b)=>b.priority-a.priority||a.issue.skill.localeCompare(b.issue.skill)||a.issue.protocol.localeCompare(b.issue.protocol));
+ const candidate=eligible[0]?.issue;
+ const issues=base.issues.map(i=>({...i,action:eligible.some(x=>x.issue===i)?'temporary-focus':'investigate'}));
+ return {...base,issues,focus:candidate?.skill??null,decision:candidate?'temporary-focus':issues.length?'investigate':'balanced',plan:plan(candidate?.skill),review};
+}
