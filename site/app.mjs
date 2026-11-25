@@ -17,10 +17,10 @@ import {createGoal,goalProgress,closeGoal,preferredDoubles,combinedExposure} fro
 import {advice} from './tactics.mjs';
 const KEY='DCI-independent:foundation:v1';
 const $=id=>document.getElementById(id);
-let memory=emptyMemory(),blocked=false,simulation=null,reportMode='none',planned=null;
+let memory=emptyMemory(),blocked=false,simulation=null,reportMode='none',planned=null,rawSnapshot=null;
 function say(s){$('status').textContent=s}
-try{const raw=localStorage.getItem(KEY);if(raw)memory=validateState(JSON.parse(raw))}catch(e){blocked=true;say('Stored data could not be read. Writes disabled to protect it; export the raw backup or explicitly restore.')}
-function persist(next){if(blocked)throw Error('Storage writes blocked until a valid backup is restored or reset is confirmed.');next=validateState(next);localStorage.setItem(KEY,JSON.stringify(next));memory=next;invalidate();render();say('Saved locally.')}
+try{const raw=localStorage.getItem(KEY);rawSnapshot=raw;if(raw)memory=validateState(JSON.parse(raw))}catch(e){blocked=true;say('Stored data could not be read. Writes disabled to protect it; export the raw backup or explicitly restore.')}
+function persist(next){if(blocked)throw Error('Storage writes blocked until a valid backup is restored or reset is confirmed.');next=validateState(next);if(localStorage.getItem(KEY)!==rawSnapshot)throw Error('Another window changed player data. Reload before saving.');const raw=JSON.stringify(next);localStorage.setItem(KEY,raw);rawSnapshot=raw;memory=next;invalidate();render();say('Saved locally.')}
 function el(tag,text){const e=document.createElement(tag);e.textContent=text;return e}
 function details(parent,title,value){const e=el('details','');const pre=el('pre',JSON.stringify(value,null,2));pre.className='debug-data';e.append(el('summary',title),pre);parent.append(e)}
 function button(text,fn){const b=el('button',text);b.type='button';b.onclick=()=>run(fn);return b}
@@ -92,7 +92,8 @@ form('checkout',d=>{const score=num(d.score),n=num(d.darts),p=$('routes'),rs=ran
 form('technical',(d,f)=>{const x=technicalInvestigation({skill:d.skill,symptom:d.symptom,pain:f.elements.pain.checked});$('tech').replaceChildren(el('p',x.action));details($('tech'),'Hypotheses and unknowns',x)});
 for(const k of knowledge)details($('knowledge'),k.id+' • '+k.level,k);
 $('export').onclick=()=>run(()=>{const data=blocked?localStorage.getItem(KEY):JSON.stringify(memory,null,2);const url=URL.createObjectURL(new Blob([data],{type:'application/json'}));const a=el('a','');a.href=url;a.download='DCI-foundation-backup.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)});
-$('restore').onchange=async e=>{try{const file=e.target.files[0];if(!file)return;if(file.size>10000000)throw Error('Backup exceeds 10 MB');const s=validateState(JSON.parse(await file.text()));if(!confirm('Replace only DCI foundation data?'))return;localStorage.setItem(KEY,JSON.stringify(s));blocked=false;memory=s;invalidate();render();say('Backup restored.')}catch(err){say(err.message)}finally{e.target.value=''}};
-$('clear').onclick=()=>run(()=>{if(!confirm('Delete only DCI foundation data? Export first if needed.'))return;if(!confirm('Confirm permanent deletion of this foundation data.'))return;localStorage.removeItem(KEY);blocked=false;memory=emptyMemory();invalidate();render();say('Foundation data removed.')});
+$('restore').onchange=async e=>{try{const file=e.target.files[0];if(!file)return;if(file.size>10000000)throw Error('Backup exceeds 10 MB');const s=validateState(JSON.parse(await file.text()));if(!confirm('Replace only DCI foundation data?'))return;const raw=JSON.stringify(s);localStorage.setItem(KEY,raw);rawSnapshot=raw;blocked=false;memory=s;invalidate();render();say('Backup restored.')}catch(err){say(err.message)}finally{e.target.value=''}};
+$('clear').onclick=()=>run(()=>{if(!confirm('Delete only DCI foundation data? Export first if needed.'))return;if(!confirm('Confirm permanent deletion of this foundation data.'))return;localStorage.removeItem(KEY);rawSnapshot=null;blocked=false;memory=emptyMemory();invalidate();render();say('Foundation data removed.')});
+window.addEventListener('storage',e=>{if(e.key!==KEY)return;try{const raw=localStorage.getItem(KEY);memory=raw?validateState(JSON.parse(raw)):emptyMemory();rawSnapshot=raw;blocked=false;invalidate();render();say('Player memory updated from another window.')}catch(err){blocked=true;invalidate();say('Another window changed data that could not be read. Writes blocked.')}});
 render();
-if('serviceWorker' in navigator)navigator.serviceWorker.register('./sw.js',{scope:'./'}).catch(()=>{if(!blocked)say('Offline cache unavailable; local data still works if storage is available.')});
+if('serviceWorker' in navigator)navigator.serviceWorker.register('./sw.js?v=0.2.0',{scope:'./'}).catch(()=>{if(!blocked)say('Offline cache unavailable; local data still works if storage is available.')});
