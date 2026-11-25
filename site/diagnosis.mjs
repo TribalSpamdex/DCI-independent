@@ -68,7 +68,8 @@ export function investigateIssue(m,issue,day){
 }
 export function deepenReport(m,report,day){
  const issues=report.issues.map(i=>{const investigation=investigateIssue(m,i,day);return {...i,investigation,action:investigation.veto?'investigate':i.action}});
- const comfort=issues.some(i=>i.investigation.veto==='comfort');
+ const latestComfort=new Map();for(const o of (m.answers??[]).filter(o=>o.question==='comfort'&&dayGap(o.day,day)>=0&&dayGap(o.day,day)<7).sort((a,b)=>a.day.localeCompare(b.day)))latestComfort.set(JSON.stringify([o.skill,o.context,o.protocol]),o.answer);
+ const comfort=issues.some(i=>i.investigation.veto==='comfort')||[...latestComfort.values()].includes('yes');
  const selected=issues.find(i=>i.skill===report.focus&&i.protocol===report.focusProtocol&&i.context===report.focusContext&&i.action==='temporary-focus');
  const candidate=selected??issues.filter(i=>i.action==='temporary-focus').sort((a,b)=>Math.abs(b.evidence.change)/(['scoring','firstNine'].includes(b.skill)?3:.05)-Math.abs(a.evidence.change)/(['scoring','firstNine'].includes(a.skill)?3:.05)||a.skill.localeCompare(b.skill))[0];
  const safe=['stop','reduce-load'].includes(report.decision)||comfort;
