@@ -3,7 +3,7 @@ import {dayValid,dayGap} from './context.mjs';
 export const APPROACHES=['attention cue','equipment','routine','practice order','practice allocation','feedback'];
 export function validateTrial(t){
  if(!t||typeof t.id!=='string'||!t.id.trim()||t.id.length>100||!SKILLS.includes(t.skill)||!APPROACHES.includes(t.approach)||!['practice','competition'].includes(t.context)||typeof t.protocol!=='string'||!t.protocol.trim()||t.protocol.length>100||!dayValid(t.start)||!['active','completed','cancelled'].includes(t.status)||!['AB','BA'].includes(t.firstOrder)||typeof t.baseline!=='string'||!t.baseline.trim()||t.baseline.length>200||typeof t.alternative!=='string'||!t.alternative.trim()||t.alternative.length>200||t.baseline.trim()===t.alternative.trim()||!Array.isArray(t.pairs)||t.pairs.length>100)throw Error('Invalid experiment');
- const days=new Set();for(const p of t.pairs){validatePair(t,p);if(days.has(p.day))throw Error('Duplicate experiment day');days.add(p.day)}
+ const days=new Set();let prior=null;for(const [index,p] of t.pairs.entries()){validatePair(t,p);const assigned=index%2===0?t.firstOrder:t.firstOrder==='AB'?'BA':'AB';if(days.has(p.day)||prior&&p.day<=prior||p.order!==assigned||index<t.pairs.length-1&&p.discomfort)throw Error('Invalid paired experiment sequence');days.add(p.day);prior=p.day}if(t.pairs.some(p=>p.discomfort)&&t.status!=='cancelled')throw Error('Discomfort must stop experiment');if(t.status==='completed'&&trialOutcome(t).status==='insufficient')throw Error('Incomplete experiment cannot be completed');
  return {...t,baseline:t.baseline.trim(),alternative:t.alternative.trim()};
 }
 export function validatePair(t,p){
