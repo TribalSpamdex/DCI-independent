@@ -1,4 +1,4 @@
-const CACHE='DCI-independent:foundation:0.1.0-dev-4';
+const CACHE='DCI-independent:foundation:0.1.0';
 const ASSETS=['./index.html','./style.css','./app.mjs','./engine.mjs','./reasoning.mjs','./knowledge.mjs','./manifest.webmanifest','./state.mjs','./target-evidence.mjs','./interventions.mjs','./context.mjs','./training.mjs','./player-intelligence.mjs','./learning.mjs'];
 self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS))));
 self.addEventListener('activate',e=>e.waitUntil(self.clients.claim()));
