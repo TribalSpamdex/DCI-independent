@@ -6,6 +6,7 @@ export function advice(memory,{score,darts=3,actual=[],doubleIn=false,opened=!do
  if(!Number.isInteger(score)||score<2||score>1001||!Number.isInteger(darts)||darts<1||darts>3||!Array.isArray(actual)||actual.length>darts||!actual.every(s=>REGIONS.includes(s))||typeof doubleIn!=='boolean'||typeof opened!=='boolean'||!['practice','competition'].includes(context)||typeof protocol!=='string'||protocol.length>100||!(opponent===null||Number.isInteger(opponent)&&opponent>=2&&opponent<=1001))throw Error('Invalid tactical input');
  if(!doubleIn&&!opened)throw Error('Straight-in visits cannot be unopened');
  const preferred=preferredDoubles(memory),played=visit(score,actual.map(canonical),{doubleIn,opened}),remaining=played.remaining,left=darts-played.used;
+ if(played.used!==actual.length)throw Error('Recorded darts continue after the visit ended');
  const base={start:score,actual,remaining,dartsLeft:left,opened:played.opened,preferred,opponent,opponentCanFinish:opponent===null?null:routes(opponent,3).length>0,limitation:'Opponent finish availability is not a measured probability of winning.'};
  if(played.bust)return {...base,status:'bust',options:[],setup:[],guidance:'Visit ended in a bust. Restore the visit-start score; no more darts in this visit.'};
  if(played.finished)return {...base,status:'finished',options:[],setup:[],guidance:'Legal double-out finish.'};
