@@ -1,9 +1,19 @@
-# DCI Independent V0.1.0 development foundation
+# DCI independent V0.1.0 — intelligence foundation
 
-This is a development branch, not an approved release. V0.0.7 is archived separately. The old deployment workflow is intentionally unchanged until the replacement passes verification.
+The first model-free foundation. The previous V0.0.7 experimental application is recoverable from archive/v0.0.7-llm-experiment. The independent application does not use WebGPU, a language model, network inference, paid services or an external API at runtime. The new Pages workflow publishes the readable site/ directory only after regression and browser verification.
 
-Architecture: dependency-free ES modules; engine (rules, checkout enumeration, structured observations, daily-cluster statistics, initial balanced executive); reasoning (technical hypotheses and intervention comparison); knowledge (provenance-labelled seed); app (structured forms, local storage and isolated simulation); service worker (scope-specific offline assets). No LLM, no WebGPU, no network inference.
+## Implemented modules
+- engine: legal steel-tip double-out route enumeration, scoring, independent skill observations, descriptive statistics, short comparison, provisional plan.
+- target-evidence: intended/actual board segment, directional miss categories, separate large/inner singles, measured distributions, restricted miss-aware tactical model.
+- context: comparable calendar windows, weekly block noise estimate, readiness reports and associations, exposure summaries.
+- reasoning and player-intelligence: competing hypotheses, stale and contradictory evidence vetoes, priority order, equipment investigation and readiness safeguards.
+- training: 11 independent skills, seven evidence levels, three initial task bands; levels 1–2 use the identical easiest variant; stable benchmarks. A five-day calendar rotation supplements core skills.
+- interventions and learning: proposed/accepted/declined training, bounded focus, baseline, adherence, confounders, later retention, descriptive distributions.
+- knowledge: 15 structured entries, including competing darts-specific findings and cross-sport research. Engineering policies are not scientific findings.
+- state and app: versioned local memory, isolated demonstration, structured interface, backup and restoration, scoped offline cache.
 
-Run node --test tests/foundation.test.mjs. Browser check: serve site/ locally on port 8765 and run python tests/browser.py with Playwright Chromium installed.
+## Verification
+Run node --test tests/foundation.test.mjs. Browser: serve site locally on port 8765, run python tests/browser.py with Playwright Chromium. Seeded simulations cover 1,000 one-year weekly histories and 500 two-year histories with three observations per week. They test logic, not real coaching effectiveness.
 
-Limitations: no migration from the old experiment; no automatic observation of throws; no validated difficulty calibration; no comprehensive coach-specific research; no full stochastic miss-recovery tactics; no validated confidence calibration; no operational intervention lifecycle UI; no longitudinal adherence collection; daily comparison thresholds are provisional, and correlated days can still bias results. Single-target accuracy and directional distributions are future work. Browser cache and real iPhone behavior must be tested before release. Population regression is synthetic, not clinical or coaching validation. Existing deployment packs the old source into its workflow; new source is intentionally readable and modular. No old module has been reused or fully audited.
+## Limitations
+No old experimental data migration (old data preserved under previous keys); no LLM; no automatic throw capture or full training game execution; no physical coordinate/grouping measurement; no validated scientific difficulty thresholds or individual causal inference; no comprehensive multi-coach knowledge research; no calibrated tactical win probability, opponent model or full double-in tactical optimisation; no full session-level intervention adherence automation; no long-term neural learning. Levels currently share task bands; difficulty changes need recorded comparable success. Readiness is reported, not a diagnosis. Offline and memory reliability on the actual iPhone remain subject to owner testing. Browser storage can be evicted; export backup. Never clear unrelated site data.
