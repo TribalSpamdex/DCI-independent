@@ -79,5 +79,5 @@ export function selectCoaching(memory,base,day){
  }).filter(x=>x.eligible).sort((a,b)=>b.priority-a.priority||a.issue.skill.localeCompare(b.issue.skill)||a.issue.protocol.localeCompare(b.issue.protocol));
  const candidate=eligible[0]?.issue;
  const issues=base.issues.map(i=>({...i,action:eligible.some(x=>x.issue===i)?'temporary-focus':'investigate'}));
- return {...base,issues,focus:candidate?.skill??null,decision:candidate?'temporary-focus':issues.length?'investigate':'balanced',plan:plan(candidate?.skill),review};
+ return {...base,issues,focus:candidate?.skill??null,focusProtocol:candidate?.protocol??null,focusContext:candidate?.context??null,decision:candidate?'temporary-focus':issues.length?'investigate':'balanced',plan:plan(candidate?.skill),review};
 }
