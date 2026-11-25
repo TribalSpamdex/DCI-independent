@@ -5,7 +5,7 @@ const daysBetween=(a,b)=>(Date.parse(b)-Date.parse(a))/86400000;
 export function propose(memory,report,id,day){
  if(!dateOk(day)||typeof id!=='string'||!id.trim()||memory.interventions.some(x=>x.id===id))throw Error('Invalid intervention identity');
  if(memory.interventions.some(x=>['proposed','accepted'].includes(x.status)))throw Error('Resolve existing intervention first');
- const issue=report.issues.find(i=>i.skill===report.focus&&i.action==='temporary-focus');
+ const issue=report.issues.find(i=>i.skill===report.focus&&i.action==='temporary-focus'&&(!report.focusProtocol||i.protocol===report.focusProtocol)&&(!report.focusContext||i.context===report.focusContext));
  if(!issue||report.decision!=='temporary-focus')throw Error('No supported focus recommendation');
  const obs=memory.observations.filter(o=>o.skill===issue.skill&&o.context===issue.context&&o.protocol===issue.protocol&&o.day<day);
  const days=[...new Set(obs.map(o=>o.day))].sort().slice(-7);
@@ -37,10 +37,13 @@ export function finish(memory,id,day,details){
  return {...memory,interventions:memory.interventions.map(i=>i.id===id?{...i,status:result.status==='observed-decline'||result.status==='unclear'?'unsuccessful':'completed',reviewDay:day,outcome:result,adherence:details.adherence,confounders:details.confounders??[]}:i)};
 }
 export function currentPlan(memory,report,day){
+ if(['stop','reduce-load'].includes(report.decision))return {mode:report.decision,plan:[]};
  const i=memory.interventions.find(x=>x.status==='accepted');
  if(!i)return {mode:'balanced-until-accepted',plan:plan(),proposed:report.focus};
  const age=daysBetween(i.responseDay,day);
  if(!Number.isFinite(age)||age<0||age>=i.maximumDays)return {mode:'review-required',plan:plan(),intervention:i.id};
+ const p=report.review?.profiles.find(p=>p.skill===i.skill&&p.context===i.context&&p.protocol===i.protocol);
+ if(p?.hypotheses.some(h=>['fatigue','pressure','confidence'].includes(h.id)&&h.status==='supported-as-possibility'))return {mode:'review-context',plan:plan(),intervention:i.id};
  if(age>=i.reviewAfterDays)return {mode:'review-due',plan:plan(),intervention:i.id};
  return {mode:'accepted-temporary-focus',plan:plan(i.skill),intervention:i.id,daysUntilReview:i.reviewAfterDays-age};
 }
