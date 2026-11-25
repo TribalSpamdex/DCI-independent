@@ -50,7 +50,7 @@ export function trainingRecommendation(m,report,day,active,number=1){
  if(previous.some(s=>s.number===number))return {mode:'already-recorded',segments:[],reason:'This session has already been logged.'};
  const focus=active.mode==='accepted-temporary-focus'?m.interventions.find(i=>i.id===active.intervention)?.skill:null;
  const base=plan(focus);
- const rotating=['switching','firstNine','trebles','pressure','grouping'];
+ const rotating=['switching','firstNine','trebles','pressure','grouping'].filter(skill=>skill==='switching'||!base.some(x=>x.skill===skill));
  const slot=base.find(x=>x.skill==='switching'&&x.minutes===5&&focus!=='switching');
  if(slot)slot.skill=[...rotating].sort((a,b)=>history.skills[a]-history.skills[b]||rotating.indexOf(a)-rotating.indexOf(b))[0];
  const segments=base.map(g=>{
