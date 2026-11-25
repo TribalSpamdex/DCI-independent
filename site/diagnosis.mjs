@@ -66,8 +66,21 @@ export function investigateIssue(m,issue,day){
  const veto=a.get('comfort')==='yes'?'comfort':a.get('protocol')==='no'?'measurement':hypotheses.some(x=>['equipment','technique','fatigue','pressure','confidence'].includes(x.id)&&['supported-possibility','mixed'].includes(x.status))?'competing-evidence':null;
  return {hypotheses,exposure,fatigue,pressure,confidence,targets,questions,veto,knowledgePolicy:'An explanation is never proven by association; contrary evidence only reduces support.'};
 }
+
+export function confirmCurrentDecline(m,issue,day){
+ const rows=m.observations.filter(o=>o.skill===issue.skill&&o.context===issue.context&&o.protocol===issue.protocol&&dayGap(o.day,day)>=0&&dayGap(o.day,day)<56);
+ const days=[...new Set(rows.map(o=>o.day))].sort(),recentDays=days.slice(-7),baselineDays=days.slice(-21,-7);
+ const recent=summarise(rows.filter(o=>recentDays.includes(o.day))),baseline=summarise(rows.filter(o=>baselineDays.includes(o.day)));
+ if(!recent||!baseline||recent.days<7||baseline.days<7||recent.attempts<60||baseline.attempts<60||dayGap(recentDays[0],day)>28||dayGap(recentDays.at(-1),day)>7)return {status:'insufficient',reason:'Require seven recent and seven preceding comparable measured days, with recent data current.'};
+ const floor=['scoring','firstNine'].includes(issue.skill)?5:.08;
+ const change=recent.dayMean-baseline.dayMean,noise=2.5*Math.sqrt(recent.daySD**2/recent.days+baseline.daySD**2/baseline.days);
+ const halves=[recent.daily.slice(0,3),recent.daily.slice(3)].map(x=>mean(x.map(o=>o.value))-baseline.dayMean);
+ const consistent=halves.every(x=>x<=-floor*.75);
+ return {status:consistent&&change<=-Math.max(floor,noise)?'confirmed':'not-confirmed',change,noise,halves,floor,baselineDays:baseline.days,recentDays:recent.days,reason:'Conservative engineering gate: current seven-day performance must be materially below the preceding baseline in both recent subperiods. Not a calibrated statistical test.'};
+}
+
 export function deepenReport(m,report,day){
- const issues=report.issues.map(i=>{const investigation=investigateIssue(m,i,day);return {...i,investigation,action:investigation.veto?'investigate':i.action}});
+ const issues=report.issues.map(i=>{const investigation=investigateIssue(m,i,day),confirmation=confirmCurrentDecline(m,i,day);return {...i,investigation,confirmation,action:investigation.veto||confirmation.status!=='confirmed'?'investigate':i.action}});
  const latestComfort=new Map();for(const o of (m.answers??[]).filter(o=>o.question==='comfort'&&dayGap(o.day,day)>=0&&dayGap(o.day,day)<7).sort((a,b)=>a.day.localeCompare(b.day)))latestComfort.set(JSON.stringify([o.skill,o.context,o.protocol]),o.answer);
  const comfort=issues.some(i=>i.investigation.veto==='comfort')||[...latestComfort.values()].includes('yes');
  const selected=issues.find(i=>i.skill===report.focus&&i.protocol===report.focusProtocol&&i.context===report.focusContext&&i.action==='temporary-focus');
