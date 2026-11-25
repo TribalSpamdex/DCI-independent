@@ -1,0 +1,28 @@
+name: Foundation verification
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Logic and population regression
+        run: node --test tests/foundation.test.mjs
+      - name: Browser tooling
+        run: |
+          python -m pip install playwright==1.51.0
+          python -m playwright install --with-deps chromium
+      - name: Browser smoke and offline checks
+        run: |
+          python -m http.server 8765 --bind 127.0.0.1 --directory site &
+          server=$!
+          trap 'kill "$server"' EXIT
+          for i in $(seq 1 20); do curl -fsS http://127.0.0.1:8765/index.html >/dev/null && break; sleep 1; done
+          python tests/browser.py
