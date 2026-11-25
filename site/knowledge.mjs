@@ -250,4 +250,240 @@ export const knowledge = [
     ]
   }
 ];
+knowledge.push(...[
+  {
+    "id": "challenge-point",
+    "skill": [
+      "scoring",
+      "doubles",
+      "checkout",
+      "singles",
+      "trebles",
+      "bull",
+      "switching",
+      "setup",
+      "pressure",
+      "grouping"
+    ],
+    "principle": "Adjust task difficulty to the learner and the purpose of the task.",
+    "level": "conceptual motor-learning framework",
+    "source": "Guadagnoli & Lee (2004)",
+    "url": "https://pubmed.ncbi.nlm.nih.gov/15130871/",
+    "conditions": [
+      "Relevant player concern or controlled practice task"
+    ],
+    "contraindications": [
+      "Pain or worsening discomfort",
+      "Insufficient comparable evidence for a causal conclusion"
+    ],
+    "alternatives": [
+      "Retain current approach",
+      "Collect further evidence"
+    ],
+    "investigation": "Compare repeated success and retention at an appropriate challenge.",
+    "intervention": "Hold a fixed benchmark and adjust practice difficulty separately.",
+    "expected": "A more informative individual comparison, not guaranteed improvement.",
+    "limitations": "No validated universal success band; local progression thresholds are engineering choices.",
+    "related": [
+      "retention",
+      "context"
+    ]
+  },
+  {
+    "id": "attention-null",
+    "skill": [
+      "scoring",
+      "doubles",
+      "grouping",
+      "trebles"
+    ],
+    "principle": "A specific attention cue is not guaranteed to improve darts performance.",
+    "level": "darts-specific novice experiment",
+    "source": "Effects of Attentional Strategies on Novice Dart Throwing, Quiet Eye Duration and Pupillary Responses (2020)",
+    "url": "https://pubmed.ncbi.nlm.nih.gov/33395561/",
+    "conditions": [
+      "Relevant player concern or controlled practice task"
+    ],
+    "contraindications": [
+      "Pain or worsening discomfort",
+      "Insufficient comparable evidence for a causal conclusion"
+    ],
+    "alternatives": [
+      "Retain current approach",
+      "Collect further evidence"
+    ],
+    "investigation": "Compare a cue against the player's normal routine across days.",
+    "intervention": "Retain the existing cue if no reproducible advantage is found.",
+    "expected": "A more informative individual comparison, not guaranteed improvement.",
+    "limitations": "Novice experimental findings may not generalise to experienced competition players.",
+    "related": [
+      "external-focus",
+      "single-variable"
+    ]
+  },
+  {
+    "id": "motor-strategies",
+    "skill": [
+      "grouping",
+      "scoring",
+      "doubles",
+      "trebles",
+      "singles",
+      "bull",
+      "switching"
+    ],
+    "principle": "Accurate expert throwers can use different movement and timing strategies.",
+    "level": "darts-specific biomechanics study",
+    "source": "Two Types of Motor Strategy for Accurate Dart Throwing (2014)",
+    "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3922883/",
+    "conditions": [
+      "Relevant player concern or controlled practice task"
+    ],
+    "contraindications": [
+      "Pain or worsening discomfort",
+      "Insufficient comparable evidence for a causal conclusion"
+    ],
+    "alternatives": [
+      "Retain current approach",
+      "Collect further evidence"
+    ],
+    "investigation": "Investigate individual release consistency and trajectory, rather than comparing a player to one ideal form.",
+    "intervention": "Avoid copying another player's mechanics without individual evidence.",
+    "expected": "A more informative individual comparison, not guaranteed improvement.",
+    "limitations": "Laboratory findings do not establish a universal coaching prescription.",
+    "related": [
+      "miss-direction",
+      "single-variable"
+    ]
+  },
+  {
+    "id": "timing-compensation",
+    "skill": [
+      "grouping",
+      "scoring",
+      "doubles",
+      "trebles"
+    ],
+    "principle": "Throwing accuracy can involve compensation between movement and release timing.",
+    "level": "darts-specific experimental research",
+    "source": "Throwing darts: timing is not the limiting factor (2002)",
+    "url": "https://pubmed.ncbi.nlm.nih.gov/12012165/",
+    "conditions": [
+      "Relevant player concern or controlled practice task"
+    ],
+    "contraindications": [
+      "Pain or worsening discomfort",
+      "Insufficient comparable evidence for a causal conclusion"
+    ],
+    "alternatives": [
+      "Retain current approach",
+      "Collect further evidence"
+    ],
+    "investigation": "Consider timing alongside the hand trajectory, not as an isolated fault.",
+    "intervention": "Use controlled observation before changing release mechanics.",
+    "expected": "A more informative individual comparison, not guaranteed improvement.",
+    "limitations": "Does not show that timing never matters for an individual.",
+    "related": [
+      "motor-strategies",
+      "miss-direction"
+    ]
+  },
+  {
+    "id": "quiet-eye-limits",
+    "skill": [
+      "pressure",
+      "grouping",
+      "doubles"
+    ],
+    "principle": "A change in gaze behaviour is not necessarily a change in throwing accuracy.",
+    "level": "darts-specific experimental research",
+    "source": "Looking to Learn Better (2020)",
+    "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7739699/",
+    "conditions": [
+      "Relevant player concern or controlled practice task"
+    ],
+    "contraindications": [
+      "Pain or worsening discomfort",
+      "Insufficient comparable evidence for a causal conclusion"
+    ],
+    "alternatives": [
+      "Retain current approach",
+      "Collect further evidence"
+    ],
+    "investigation": "Measure throwing outcomes as well as any change in visual routine.",
+    "intervention": "Do not prescribe gaze duration as a universal target.",
+    "expected": "A more informative individual comparison, not guaranteed improvement.",
+    "limitations": "Study-specific task and instructions limit transfer.",
+    "related": [
+      "external-focus",
+      "attention-null"
+    ]
+  },
+  {
+    "id": "process-goals",
+    "skill": [
+      "pressure",
+      "scoring",
+      "checkout",
+      "doubles"
+    ],
+    "principle": "Consider controllable process goals alongside outcome goals.",
+    "level": "cross-sport systematic review and meta-analysis",
+    "source": "The performance and psychological effects of goal setting in sport (2022)",
+    "url": "https://doi.org/10.1080/1750984X.2022.2116723",
+    "conditions": [
+      "Relevant player concern or controlled practice task"
+    ],
+    "contraindications": [
+      "Pain or worsening discomfort",
+      "Insufficient comparable evidence for a causal conclusion"
+    ],
+    "alternatives": [
+      "Retain current approach",
+      "Collect further evidence"
+    ],
+    "investigation": "Ask the player whether the goal supports focus and test performance on a stable task.",
+    "intervention": "Use a simple controllable action goal without guaranteeing an outcome.",
+    "expected": "A more informative individual comparison, not guaranteed improvement.",
+    "limitations": "Cross-sport findings, individual response and study heterogeneity matter.",
+    "related": [
+      "pre-performance-routine",
+      "retention"
+    ]
+  },
+  {
+    "id": "equipment-isolation",
+    "skill": [
+      "grouping",
+      "scoring",
+      "doubles",
+      "singles",
+      "trebles",
+      "bull"
+    ],
+    "principle": "Test equipment changes individually before buying or replacing a setup.",
+    "level": "engineering control policy",
+    "source": "DCI policy; equipment-specific research not yet verified",
+    "url": null,
+    "conditions": [
+      "Relevant player concern or controlled practice task"
+    ],
+    "contraindications": [
+      "Pain or worsening discomfort",
+      "Insufficient comparable evidence for a causal conclusion"
+    ],
+    "alternatives": [
+      "Retain current approach",
+      "Collect further evidence"
+    ],
+    "investigation": "Compare existing and alternative setups with matched tasks and alternating order.",
+    "intervention": "Preserve current equipment unless measurable evidence or comfort justifies a trial.",
+    "expected": "A more informative individual comparison, not guaranteed improvement.",
+    "limitations": "Comfort and adaptation effects may confound the comparison.",
+    "related": [
+      "single-variable",
+      "motor-strategies"
+    ]
+  }
+]);
 export function relevant(skill){return knowledge.filter(x=>x.skill.includes(skill))}
