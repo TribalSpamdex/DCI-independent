@@ -76,7 +76,17 @@ export function confirmCurrentDecline(m,issue,day){
  const change=recent.dayMean-baseline.dayMean,noise=2.5*Math.sqrt(recent.daySD**2/recent.days+baseline.daySD**2/baseline.days);
  const halves=[recent.daily.slice(0,3),recent.daily.slice(3)].map(x=>mean(x.map(o=>o.value))-baseline.dayMean);
  const consistent=halves.every(x=>x<=-floor*.75);
- return {status:consistent&&change<=-Math.max(floor,noise)?'confirmed':'not-confirmed',change,noise,halves,floor,baselineDays:baseline.days,recentDays:recent.days,reason:'Conservative engineering gate: current seven-day performance must be materially below the preceding baseline in both recent subperiods. Not a calibrated statistical test.'};
+ const short=consistent&&change<=-Math.max(floor,noise);
+ const last14=days.slice(-14),older14=days.slice(-28,-14);
+ const longBase=summarise(rows.filter(o=>older14.includes(o.day))),longRecent=summarise(rows.filter(o=>last14.includes(o.day)));
+ let persistent=false,long=null;
+ if(longBase&&longRecent&&longBase.days>=7&&longRecent.days===14&&longBase.attempts>=60&&dayGap(last14[0],day)<=35){
+ const delta=longRecent.dayMean-longBase.dayMean,margin=2.5*Math.sqrt(longRecent.daySD**2/longRecent.days+longBase.daySD**2/longBase.days);
+ const weeks=[longRecent.daily.slice(0,7),longRecent.daily.slice(7)].map(x=>mean(x.map(o=>o.value))-longBase.dayMean);
+ persistent=weeks.every(x=>x<=-floor)&&delta<=-Math.max(floor,margin)&&halves.every((_,i)=>mean(recent.daily.slice(i===0?0:3,i===0?3:7).map(o=>o.value))-longBase.dayMean<=-floor*.75);
+ long={change:delta,noise:margin,weeks,baselineDays:longBase.days,recentDays:longRecent.days};
+ }
+ return {status:short||persistent?'confirmed':'not-confirmed',mode:short?'recent':persistent?'persistent':'none',change,noise,halves,floor,baselineDays:baseline.days,recentDays:recent.days,long,reason:'Conservative engineering gate: current decline must be confirmed across recent subperiods or two consecutive seven-day blocks against an earlier baseline. Not a calibrated statistical test.'};
 }
 
 export function deepenReport(m,report,day){
