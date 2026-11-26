@@ -9,6 +9,7 @@ import {combinedExposure} from './goals.mjs';
 import {currentPlan} from './interventions.mjs';
 import {knowledge} from './knowledge.mjs';
 import {followupReview} from './followup.mjs';
+import {legEvidence,legSummary} from './match.mjs';
 import {targetComparison,directionReview} from './target-analysis.mjs';
 const same=(a,b)=>a.skill===b.skill&&a.protocol===b.protocol&&a.context===b.context;
 export function safetyReview(m,day){
@@ -51,7 +52,8 @@ export function actionOptions(m,i,day){
 }
 export function fullReport(m,day){
  if(!dayValid(day))throw Error('Invalid report date');
- const visible={...m,observations:m.observations.filter(o=>dayGap(o.day,day)>=0&&dayGap(o.day,day)<84),exposure:combinedExposure(m).filter(o=>o.day<=day),interventions:m.interventions.filter(i=>i.proposedDay<=day||!i.proposedDay)};
+ const derived=legEvidence(m,day),reserved=new Set(derived.map(o=>o.id));const observations=[...m.observations.filter(o=>!reserved.has(o.id)),...derived];
+ const visible={...m,observations:observations.filter(o=>dayGap(o.day,day)>=0&&dayGap(o.day,day)<84),exposure:combinedExposure(m).filter(o=>o.day<=day),interventions:m.interventions.filter(i=>i.proposedDay<=day||!i.proposedDay)};
  let report=deepenReport(visible,selectCoaching(visible,executive(visible),day),day);
  const safety=safetyReview(visible,day);
  const issues=report.issues.map(i=>{const clinic=clinicReview(visible,i,day);const hasObservation=clinic.hypotheses.some(h=>['corroborated-observation','mixed'].includes(h.status));const targets=i.investigation?.targets??[],targetEvidence=targets.length>=2?targetComparison(visible,{first:targets[0].aim,second:targets.at(-1).aim,context:i.context,protocol:i.protocol,day}):null;const directions=targets.slice(0,3).map(t=>directionReview(visible,{aim:t.aim,context:i.context,protocol:i.protocol,day}));return {...i,clinic,targetEvidence,directions,action:hasObservation||clinic.decision==='stop'?'investigate':i.action}});
@@ -59,9 +61,9 @@ export function fullReport(m,day){
  report=resolvePriorities(visible,{...report,issues},day);
  report={...report,issues:report.issues.map(i=>({...i,actions:report.decision==='stop'?[]:actionOptions(visible,i,day)})),safety};
  // Use complete history for progress and learning, never pool unlike benchmarks.
- const development=developmentReview(m,report,day);
+ const development=developmentReview({...m,observations},report,day);
  const active=verifiedPlan(m,report,day);
- return {...report,development,active,learning:(m.trials??[]).filter(t=>t.status==='completed'&&t.pairs.every(p=>p.day<=day)).map(t=>({id:t.id,skill:t.skill,approach:t.approach,reviews:followupReview(m,t,day)})),trace:{decision:report.decision,primary:report.strategy.primary,safetyFlags:safety.flags,issues:report.issues.map(i=>({skill:i.skill,protocol:i.protocol,context:i.context,action:i.action,confirmation:i.confirmation?.status,veto:i.investigation?.veto??null,priorOutcome:i.strategy?.ledger?.policy??null})),policy:'Deterministic decision trace; no scientific probability assigned.'}};
+ return {...report,development,active,match:legSummary(m,day),learning:(m.trials??[]).filter(t=>t.status==='completed'&&t.pairs.every(p=>p.day<=day)).map(t=>({id:t.id,skill:t.skill,approach:t.approach,reviews:followupReview(m,t,day)})),trace:{decision:report.decision,primary:report.strategy.primary,safetyFlags:safety.flags,issues:report.issues.map(i=>({skill:i.skill,protocol:i.protocol,context:i.context,action:i.action,confirmation:i.confirmation?.status,veto:i.investigation?.veto??null,priorOutcome:i.strategy?.ledger?.policy??null})),policy:'Deterministic decision trace; no scientific probability assigned.'}};
 }
 export function verifiedPlan(m,report,day){
  const active=currentPlan(m,report,day);
