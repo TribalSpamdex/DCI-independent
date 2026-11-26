@@ -12,7 +12,7 @@ import {CHANGE_FIELDS,recordAnswer,recordChange,deepenReport} from './diagnosis.
 import {APPROACHES,beginTrial,nextOrder,addPair,trialOutcome,finishTrial,approachHistory} from './experiments.mjs';
 import {trainingRecommendation,logSession} from './session-intelligence.mjs';
 import {explainReport,skillName} from './explanation.mjs';
-import {SCENARIOS,scenario} from './scenarios.mjs';
+import {SCENARIOS,EXECUTIVE_SCENARIOS,scenario} from './scenarios.mjs';
 import {createGoal,goalProgress,closeGoal,preferredDoubles,combinedExposure} from './goals.mjs';
 import {advice} from './tactics.mjs';
 import {DOMAINS,OBSERVATIONS,CONDITIONS,METHODS,recordClinic,clinicReview} from './clinic.mjs';
@@ -44,7 +44,7 @@ for(const select of document.querySelectorAll('.aims,.regions'))for(const region
 for(const select of document.querySelectorAll('.readiness-levels'))for(const value of ['unknown','low','normal','high']){const o=el('option',value);o.value=value;select.append(o)}
 for(const name of EQUIPMENT_FIELDS){const l=el('label',name+' '),input=el('input','');input.type='checkbox';input.name='changed';input.value=name;l.prepend(input);$('equipment-fields').append(l)}
 function option(select,value,label=value){const o=el('option',label);o.value=value;select.append(o)}
-for(const [value,label] of SCENARIOS)option($('scenario'),value,label);
+for(const [value,label] of [...SCENARIOS,...EXECUTIVE_SCENARIOS])option($('scenario'),value,label);
 for(const value of CHANGE_FIELDS)option($('change-field'),value);
 for(const value of APPROACHES)option($('trial-approach'),value);
 for(const [id,values] of [['clinic-domain',DOMAINS],['clinic-observation',OBSERVATIONS],['clinic-condition',CONDITIONS],['clinic-method',METHODS]])for(const v of values)option($(id),v);
