@@ -2,6 +2,7 @@ import {SKILLS,plan,summarise} from './engine.mjs';
 import {dayValid,dayGap} from './context.mjs';
 import {goalProgress} from './goals.mjs';
 import {trialOutcome} from './experiments.mjs';
+import {followupReview} from './followup.mjs';
 const id=i=>JSON.stringify([i.skill,i.context,i.protocol]);
 const same=(a,b)=>id(a)===id(b);
 const scope=(o,i)=>same(o,i);
@@ -15,10 +16,10 @@ export function learningLedger(m,i,day){
  const later=(x.retentionHistory??[]).filter(o=>o.reviewDay<=day).sort((a,b)=>b.reviewDay.localeCompare(a.reviewDay))[0];
  return {id:x.id,kind:'training-allocation',outcome:x.outcome?.status??'unknown',retention:later?.status??'not-assessed',reviewDay:x.reviewDay,adherence:x.adherence??null};
  });
- for(const t of trials){const out=trialOutcome(t);entries.push({id:t.id,kind:t.approach,outcome:out.status,baseline:t.baseline,alternative:t.alternative,retention:'not-assessed',reviewDay:t.pairs.at(-1)?.day??t.start})}
- const blocked=entries.filter(x=>x.outcome==='observed-decline'||x.outcome==='unclear'&&x.kind==='training-allocation'||x.retention==='retention-not-established'||x.outcome==='baseline-favoured');
+ for(const t of trials){const out=trialOutcome(t),delayed=followupReview(m,t,day),retention=delayed.find(x=>x.kind==='retention')?.status??'not-assessed';entries.push({id:t.id,kind:t.approach,outcome:out.status,baseline:t.baseline,alternative:t.alternative,retention,delayed:delayed.map(x=>({kind:x.kind,protocol:x.protocol,context:x.context,status:x.status})),reviewDay:t.pairs.at(-1)?.day??t.start})}
+ const blocked=entries.filter(x=>x.outcome==='observed-decline'||x.outcome==='unclear'&&x.kind==='training-allocation'||['retention-not-established','benefit-not-established','observed-decline'].includes(x.retention)||x.outcome==='baseline-favoured');
  const promising=entries.filter(x=>x.outcome==='observed-improvement'||x.outcome==='alternative-favoured');
- return {entries,blocked,promising,retained:promising.filter(x=>x.retention==='observed-retention'),policy:blocked.length?'review-previous-outcomes':'no-established-causal-effect'};
+ return {entries,blocked,promising,retained:promising.filter(x=>['observed-retention','observed-benefit'].includes(x.retention)&&!blocked.some(b=>b.id===x.id)),policy:blocked.length?'review-previous-outcomes':'no-established-causal-effect'};
 }
 export function questionAgenda(m,issues,day){
  const entries=[];
