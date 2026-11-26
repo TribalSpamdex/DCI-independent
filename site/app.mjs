@@ -20,6 +20,7 @@ import {SETUP_FIELDS,recordSetup,setupComparison} from './equipment-profile.mjs'
 import {recordFollowup,followupReview} from './followup.mjs';
 import {fullReport,canAccept} from './executive.mjs';
 import {targetComparison,scoringComparison,directionReview} from './target-analysis.mjs';
+import {analyseLeg,recordLeg,parseVisits,legSummary} from './match.mjs';
 const KEY='DCI-independent:foundation:v1';
 const $=id=>document.getElementById(id);
 let memory=emptyMemory(),blocked=false,simulation=null,reportMode='none',planned=null,rawSnapshot=null;
@@ -60,7 +61,7 @@ form('difficulty',d=>persist(recordDifficulty(memory,{...d,id:crypto.randomUUID(
 form('equipment',(d,f)=>{const changed=new FormData(f).getAll('changed'),result=equipmentInvestigation({changed,discomfort:f.elements.discomfort.checked,measuredDecline:f.elements.measuredDecline.checked});$('equipment-report').replaceChildren(el('p',result.action));details($('equipment-report'),'Competing explanations',result)});
 function renderExtra(){for(const [id,key] of [['readiness-history','readiness'],['difficulty-history','difficulty']]){const p=$(id),rows=memory[key]??[];p.replaceChildren(el('p',rows.length+' recorded entries'));for(const row of rows.slice(-10).reverse()){const item=el('div','');details(item,row.day+' • '+(row.skill??row.context),row);item.append(button('Remove',()=>{if(confirm('Remove this entry?'))persist({...memory,[key]:(memory[key]??[]).filter(x=>key==='readiness'?x.day!==row.day||x.context!==row.context:x.id!==row.id)})}));p.append(item)}}}
 function decisionFor(m,day){return fullReport(m,day)}
-function invalidate(){simulation=null;reportMode='none';planned=null;$('report').replaceChildren();$('session-plan').replaceChildren();for(const id of ['development-report','clinic-result','setup-result','target-comparison'])$(id).replaceChildren();$('propose').disabled=false}
+function invalidate(){simulation=null;reportMode='none';planned=null;$('report').replaceChildren();$('session-plan').replaceChildren();for(const id of ['development-report','clinic-result','setup-result','target-comparison','match-report'])$(id).replaceChildren();$('propose').disabled=false}
 function bullet(parent,items){if(!items.length)return;const ul=el('ul','');for(const item of items)ul.append(el('li',item));parent.append(ul)}
 function report(m,label,date=today()){
  const x=decisionFor(m,date),p=$('report'),active=x.active,readable=explainReport(x,m);
@@ -88,7 +89,7 @@ function answerQuestion(scope,question,answer,date){
  if(reportMode==='simulation'&&simulation){simulation.memory=recordAnswer(simulation.memory,o);report(simulation.memory,'SIMULATION ONLY — never saved',simulation.day)}
  else{persist(recordAnswer(memory,o));report(memory,'Real player only',today())}
 }
-function renderNew(){
+function renderNew(){renderLegs();
  const clinic=$('clinic-history');clinic.replaceChildren(el('p',(memory.clinic??[]).length+' technical observations'));
  for(const o of (memory.clinic??[]).slice(-20).reverse()){const row=el('div','');row.append(el('p',o.day+' • '+o.domain+' • '+o.observation+' ('+o.method+')'));row.append(button('Remove',()=>{if(confirm('Remove this technical observation?'))persist({...memory,clinic:memory.clinic.filter(x=>x.id!==o.id)})}));clinic.append(row)}
  for(const id of ['setup-a','setup-b']){const p=$(id),previous=p.value;p.replaceChildren();for(const o of memory.setups??[])option(p,o.id,o.day+' • '+o.name);if([...p.options].some(o=>o.value===previous))p.value=previous}
@@ -101,6 +102,9 @@ function renderNew(){
  const answers=$('investigation-answers');answers.replaceChildren(el('p',(memory.answers??[]).length+' recorded investigation answers'));
  for(const [index,o] of (memory.answers??[]).map((o,index)=>[index,o]).slice(-20).reverse()){const row=el('p',o.day+' • '+o.skill+' • '+o.question+': '+o.answer+' ');row.append(button('Remove',()=>{if(confirm('Remove this answer?'))persist({...memory,answers:memory.answers.filter((_,i)=>i!==index)})}));answers.append(row)}
 }
+function renderLegs(){const p=$('leg-history');p.replaceChildren(el('p',(memory.legs??[]).length+' recorded legs'));for(const l of (memory.legs??[]).slice(-20).reverse()){const x=analyseLeg(l),row=el('div','');row.append(el('p',l.day+' • '+l.start+' • '+l.result+' • '+x.average.toFixed(1)+' average'));row.append(button('Remove',()=>{if(confirm('Remove this leg and its derived evidence?'))persist({...memory,legs:memory.legs.filter(v=>v.id!==l.id)})}));details(row,'Verified visit history',x);p.append(row)}}
+form('leg',(d,f)=>persist(recordLeg(memory,{...d,id:crypto.randomUUID(),start:num(d.start),doubleIn:f.elements.doubleIn.checked,visits:parseVisits(d.visits)})));
+$('match-review').onclick=()=>run(()=>{const rows=legSummary(memory,today()),p=$('match-report');p.replaceChildren(el('h3','Last 28 days'));if(!rows.length)p.append(el('p','No completed leg records.'));for(const x of rows){p.append(el('h3',x.start+' • '+x.context+(x.doubleIn?' • double-in':'')),el('p',x.legs+' legs • '+x.wins+' wins • '+x.average.toFixed(1)+' three-dart average'),el('p','First nine: '+(x.firstNine===null?'not available':x.firstNine.toFixed(1))),el('p','Checkout visits: '+(x.checkoutVisitRate===null?'not available':(100*x.checkoutVisitRate).toFixed(1)+'%')+' • '+x.checkoutVisits+' opportunities'),el('p','Explicit finishing doubles: '+(x.finishingDoubleRate===null?'not enough known aim':(100*x.finishingDoubleRate).toFixed(1)+'%')),el('p',x.limitation));details(p,'Verified aggregate evidence',x)}});
 function comparisonData(){const d=Object.fromEntries(new FormData($('target-compare')));return {...d,day:today()}}
 function renderComparison(title,x){const p=$('target-comparison');p.replaceChildren(el('h3',title),el('p',x.status.replaceAll('-',' ')));if(x.estimates)bullet(p,x.estimates.map(e=>e.target+': '+(e.average===null?'Not available':e.average.toFixed(1)+' average')+' • '+e.attempts+' attempts'));if(x.recommendation)p.append(el('p','Observed scoring advantage: '+x.recommendation));if(x.action)p.append(el('p',x.action));if(x.pairedDays!==undefined)p.append(el('p',x.pairedDays+' comparable days'));if(Number.isFinite(x.delta))p.append(el('p','Observed difference: '+(x.delta*100).toFixed(1)+' percentage points'));p.append(el('p',x.limitation));details(p,'Measurement evidence',x)}
 form('target-compare',d=>renderComparison('Matched target accuracy',targetComparison(memory,{...d,day:today()})));
