@@ -1,8 +1,15 @@
-# DCI Independent V0.3.0 — unified specialist executive
+# DCI Independent V0.4.0 — local integration foundation
 
 The previous working release is preserved at archive/v0.2.0. Model-free runtime, no paid APIs, unchanged app-specific storage key. Other darts apps remain untouched.
 
-## New architecture
+## V0.4.0 changes
+- Local versioned query/command contract; explicit consent for state changes, transactional batch results, no network or persistence in the API itself.
+- Namespaced benchmark interchange and local file preview/confirm with identical retry deduplication and conflicting event rejection.
+- Bounded read-only question interface, on-demand investigation agenda, and isolated host-integration demonstration.
+- Clear stale simulation output on selector change; separate answer button layout.
+- See INTEGRATION.md for exact contracts and limitations. No modifications to either other darts app. Host adapter mapping and live host integration remain outstanding.
+
+## Existing architecture
 - clinic: 16 structured technical observation domains with method, dates, contradictory observations and conservative safety flags. No automated video measurement or mechanical diagnosis.
 - strategy: goal-aware prioritisation, related issue clustering, question ordering and suppression of unknown answers for seven days; personalised outcome ledger. Priority is an ordinal policy, not scientific probability or causal proof.
 - executive and verification: coordinated evidence selection, 84-day current analysis window, independently checked decision, consent and 60-minute plan invariants, safety fallback, exact-proposal revalidation and pauses for new conflicting evidence during accepted interventions.
