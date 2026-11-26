@@ -1,6 +1,8 @@
 import {visit,routes,isDouble,points,summarise} from './engine.mjs';
 import {REGIONS} from './target-evidence.mjs';
 import {dayValid,dayGap} from './context.mjs';
+const checkoutCache=new Map();
+function canFinish(score,opened){const key=score+'/'+opened;if(!checkoutCache.has(key))checkoutCache.set(key,score<=170&&(opened?![159,162,163,165,166,168,169].includes(score):routes(score,3).some(x=>isDouble(x[0]))));return checkoutCache.get(key)}
 const canonical=x=>/^[LI]/.test(x)?'S'+x.slice(1):x;
 export function analyseLeg(raw){
  if(!raw||typeof raw.id!=='string'||!raw.id.trim()||raw.id.length>80||!dayValid(raw.day)||![101,201,301,501,701].includes(raw.start)||typeof raw.doubleIn!=='boolean'||!['practice','competition'].includes(raw.context)||!['won','lost','abandoned'].includes(raw.result)||!Array.isArray(raw.visits)||raw.visits.length<1||raw.visits.length>100)throw Error('Invalid leg');
@@ -12,7 +14,7 @@ export function analyseLeg(raw){
  const start=remaining,wasOpen=opened,darts=v.darts.map(canonical),r=visit(start,darts,{doubleIn:raw.doubleIn,opened});
  if(r.used!==darts.length)throw Error('Extra dart after finish or bust');
  if(!r.finished&&!r.bust&&darts.length!==3&&!(i===raw.visits.length-1&&raw.result==='abandoned'))throw Error('An unfinished non-bust visit needs three darts');
- const possible=wasOpen?routes(start,3).length>0:routes(start,3).some(x=>isDouble(x[0]));
+ const possible=canFinish(start,wasOpen);
  if(possible){checkoutVisits++;if(r.finished)checkoutWins++}
  let left=start,active=opened;
  for(let j=0;j<darts.length;j++){
@@ -52,4 +54,9 @@ export function legSummary(m,day){
  const rows=(m.legs??[]).filter(l=>dayGap(l.day,day)>=0&&dayGap(l.day,day)<28&&l.result!=='abandoned'),groups=new Map();
  for(const l of rows){const k=JSON.stringify([l.start,l.doubleIn,l.context]),g=groups.get(k)??[];g.push(analyseLeg(l));groups.set(k,g)}
  return [...groups.values()].map(rows=>{const sum=k=>rows.reduce((n,x)=>n+x[k],0),n=sum('thrown'),attempts=sum('checkoutVisits'),nine=rows.filter(x=>x.firstNineDarts===9),known=rows.filter(x=>!x.unknownIntent),d=known.reduce((n,x)=>n+x.finishAttempts,0);return {start:rows[0].leg.start,doubleIn:rows[0].leg.doubleIn,context:rows[0].leg.context,legs:rows.length,wins:rows.filter(x=>x.leg.result==='won').length,average:3*sum('points')/n,darts:n,firstNine:nine.length?3*nine.reduce((n,x)=>n+x.firstNinePoints,0)/(9*nine.length):null,checkoutVisitRate:attempts?sum('checkoutWins')/attempts:null,checkoutVisits:attempts,finishingDoubleRate:d?known.reduce((n,x)=>n+x.finishHits,0)/d:null,finishingDoubleAttempts:d,busts:sum('busts'),unknownIntent:sum('unknownIntent'),limitation:'Win count is descriptive, opponent skill not modelled. Checkout visit rate is not per-dart double percentage.'}})
+}
+
+export function parseVisits(text){
+ if(typeof text!=='string'||!text.trim()||text.length>5000)throw Error('Enter one visit per line');
+ return text.trim().split(/\r?\n/).filter(l=>l.trim()).map(l=>{const darts=[],aims=[];for(const token of l.trim().toUpperCase().split(/\s+/)){const parts=token.split('>');if(parts.length>2||parts.some(s=>!s))throw Error('Use actual segment or AIM>ACTUAL');if(parts.length===1){aims.push(null);darts.push(parts[0])}else{aims.push(parts[0]);darts.push(parts[1])}}return {darts,aims}});
 }
