@@ -22,10 +22,10 @@ import {fullReport,canAccept} from './executive.mjs';
 import {targetComparison,scoringComparison,directionReview} from './target-analysis.mjs';
 import {analyseLeg,recordLeg,parseVisits,legSummary} from './match.mjs';
 import {ask,EXAMPLES} from './coach-dialogue.mjs';
-import {integrationExample} from './host-adapter.mjs';
+import {integrationExample,previewHostExport,importBenchmarks} from './host-adapter.mjs';
 const KEY='DCI-independent:foundation:v1';
 const $=id=>document.getElementById(id);
-let memory=emptyMemory(),blocked=false,simulation=null,reportMode='none',planned=null,rawSnapshot=null;
+let memory=emptyMemory(),blocked=false,simulation=null,reportMode='none',planned=null,rawSnapshot=null,pendingHost=null,hostSelection=0;
 function say(s){$('status').textContent=s}
 try{const raw=localStorage.getItem(KEY);rawSnapshot=raw;if(raw)memory=validateState(JSON.parse(raw))}catch(e){blocked=true;say('Stored data could not be read. Writes disabled to protect it; export the raw backup or explicitly restore.')}
 function persist(next){if(blocked)throw Error('Storage writes blocked until a valid backup is restored or reset is confirmed.');next=validateState(next);if(localStorage.getItem(KEY)!==rawSnapshot)throw Error('Another window changed player data. Reload before saving.');const raw=JSON.stringify(next);localStorage.setItem(KEY,raw);rawSnapshot=raw;memory=next;invalidate();render();say('Saved locally.')}
@@ -66,8 +66,10 @@ function showCoachAnswer(question){const p=$('coach-response');p.replaceChildren
 form('coach-ask',d=>showCoachAnswer(d.question));
 for(const question of EXAMPLES)$('coach-examples').append(button(question,()=>{$('coach-ask').elements.question.value=question;showCoachAnswer(question)}));
 $('integration-demo').onclick=()=>run(()=>{const p=$('integration-result');p.replaceChildren();const x=integrationExample(today());p.append(el('h3','ISOLATED INTEGRATION TEST'),el('p','Imported records: '+x.imported),el('p','Duplicate retry records ignored: '+x.retried),el('p','Total unique records: '+x.total),el('p','Decision: '+x.decision+(x.focus?' • '+x.focus:'')),el('p','Training: '+x.trainingMinutes+' minutes'),el('p','Verification: '+x.verification),el('p','No real player data changed.'))});
+$('host-file').onchange=async()=>{const selection=++hostSelection;pendingHost=null;$('host-confirm').disabled=true;const p=$('host-preview');p.replaceChildren();try{const file=$('host-file').files[0];if(!file)return;if(blocked)throw Error('Player memory is blocked');if(file.size>250000)throw Error('Host file is too large');const raw=await file.text();if(selection!==hostSelection)return;const preview=previewHostExport(memory,raw,today());pendingHost={...preview,snapshot:rawSnapshot};p.append(el('p','Source: '+preview.data.source),el('p','New records: '+preview.imported+' • Identical duplicates: '+preview.duplicates));bullet(p,preview.scopes);$('host-confirm').disabled=preview.imported===0}catch(error){if(selection===hostSelection)p.append(el('p',error.message))}};
+$('host-confirm').onclick=()=>run(()=>{if(!pendingHost||pendingHost.snapshot!==rawSnapshot||localStorage.getItem(KEY)!==rawSnapshot)throw Error('Player data changed. Select and preview the export again.');if(!confirm('Import these '+pendingHost.imported+' real benchmark records into local player memory?'))return;const {data}=pendingHost,result=importBenchmarks(memory,data.source,data.events,today(),{confirmed:true});persist(result.state);$('host-preview').append(el('p','Imported '+result.imported+' benchmark records.'));$('host-file').value=''});
 function decisionFor(m,day){return fullReport(m,day)}
-function invalidate(){simulation=null;reportMode='none';planned=null;$('report').replaceChildren();$('session-plan').replaceChildren();for(const id of ['development-report','clinic-result','setup-result','target-comparison','match-report','coach-response','integration-result'])$(id).replaceChildren();$('propose').disabled=false}
+function invalidate(){pendingHost=null;hostSelection++;$('host-confirm').disabled=true;$('host-preview').replaceChildren();$('host-file').value='';simulation=null;reportMode='none';planned=null;$('report').replaceChildren();$('session-plan').replaceChildren();for(const id of ['development-report','clinic-result','setup-result','target-comparison','match-report','coach-response','integration-result'])$(id).replaceChildren();$('propose').disabled=false}
 function bullet(parent,items){if(!items.length)return;const ul=el('ul','');for(const item of items)ul.append(el('li',item));parent.append(ul)}
 function report(m,label,date=today()){
  const x=decisionFor(m,date),p=$('report'),active=x.active,readable=explainReport(x,m);
