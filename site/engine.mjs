@@ -1,5 +1,5 @@
 // DCI independent foundation; no runtime dependencies.
-const VERSION="0.2.0";
+const VERSION="0.3.0";
 const SKILLS=["scoring","firstNine","singles","doubles","checkout","trebles","bull","switching","setup","pressure","grouping"];
 const SEGMENTS=["S1","D1","T1","S2","D2","T2","S3","D3","T3","S4","D4","T4","S5","D5","T5","S6","D6","T6","S7","D7","T7","S8","D8","T8","S9","D9","T9","S10","D10","T10","S11","D11","T11","S12","D12","T12","S13","D13","T13","S14","D14","T14","S15","D15","T15","S16","D16","T16","S17","D17","T17","S18","D18","T18","S19","D19","T19","S20","D20","T20","25","50"];
 function invariant(ok,msg){if(!ok)throw new Error(msg)}
