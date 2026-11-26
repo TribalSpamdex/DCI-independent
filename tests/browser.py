@@ -152,6 +152,18 @@ with sync_playwright() as p:
     assert "1 recorded legs" in page.locator("#leg-history").inner_text()
     assert "1 technical observations" in page.locator("#clinic-history").inner_text()
     assert "2 setup snapshots" in page.locator("#setup-history").inner_text()
+    host_file={"name":"benchmark.json","mimeType":"application/json","buffer":json.dumps({"format":"DCI-benchmark-events","version":1,"source":"browser-fixture","events":[{"eventId":"test1","day":"2026-01-15","skill":"doubles","context":"practice","protocol":"fixed-60","attempts":60,"hits":20}]}).encode()}
+    page.locator("#host-file").set_input_files(host_file)
+    page.wait_for_function("document.getElementById('host-preview').textContent.includes('New records: 1')")
+    assert len(page.evaluate("JSON.parse(localStorage.getItem('DCI-independent:foundation:v1')).observations"))==0
+    page.once("dialog",lambda d:d.accept())
+    page.locator("#host-confirm").click()
+    assert "Imported 1 benchmark records" in page.locator("#host-preview").inner_text()
+    page.locator("#host-file").set_input_files(host_file)
+    page.wait_for_function("document.getElementById('host-preview').textContent.includes('Identical duplicates: 1')")
+    assert page.locator("#host-confirm").is_disabled()
+    page.reload()
+    assert "1 performance records" in page.locator("#records").inner_text()
     page.evaluate("navigator.serviceWorker.ready")
     page.wait_for_function("navigator.serviceWorker.controller !== null")
     if os.getenv("DCI_BROWSER")=="webkit":
