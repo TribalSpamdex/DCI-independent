@@ -25,9 +25,9 @@ export function questionAgenda(m,issues,day){
  const priority={comfort:100,protocol:90,equipment:65,technique:60,fatigue:55,pressure:45,logging:35};
  for(const i of issues){
  for(const q of i.investigation?.questions??[]){
- const history=(m.answers??[]).filter(o=>scope(o,i)&&o.question===q.id&&o.day<=day).sort((a,b)=>b.day.localeCompare(a.day));
+ const history=(m.answers??[]).filter(o=>scope(o,i)&&o.question===q.id&&o.day<=day).sort((a,b)=>a.day.localeCompare(b.day));
  // Unknown is a real answer. Do not immediately repeat it; request a measurement instead.
- if(history[0]?.answer==='unknown'&&dayGap(history[0].day,day)<7)continue;
+ if(history.at(-1)?.answer==='unknown'&&dayGap(history.at(-1).day,day)<7)continue;
  let rank=priority[q.id]??20;
  if(q.id==='logging'&&i.investigation.exposure?.status==='incomplete-logging')rank+=20;
  if(q.id==='pressure'&&i.context==='competition')rank+=20;
@@ -48,7 +48,7 @@ export function resolvePriorities(m,report,day){
  return {...i,action,strategy:{severity,goalRelevant:goals.some(g=>g.status!=='target-observed'),goals,ledger,reason:previous?'A prior focused-training outcome was unsuccessful or not retained; investigate an alternative rather than repeat it automatically.': 'Prioritise confirmed current change and relevant measured goals.'}};
  }).sort((a,b)=>Number(b.action==='temporary-focus')-Number(a.action==='temporary-focus')||Number(b.strategy.goalRelevant)-Number(a.strategy.goalRelevant)||b.strategy.severity-a.strategy.severity||id(a).localeCompare(id(b)));
  const clusters=[];
- for(const i of issues){const group=clusters.find(g=>g.context===i.context&&g.skills.some(s=>s===i.skill||related[s]?.includes(i.skill)||related[i.skill]?.includes(s)));if(group){if(!group.skills.includes(i.skill))group.skills.push(i.skill);group.issues.push(id(i))}else clusters.push({context:i.context,skills:[i.skill],issues:[id(i)]})}
+ for(const i of issues){const matches=clusters.filter(g=>g.context===i.context&&g.skills.some(s=>s===i.skill||related[s]?.includes(i.skill)||related[i.skill]?.includes(s)));const group={context:i.context,skills:[...new Set([i.skill,...matches.flatMap(g=>g.skills)])],issues:[id(i),...matches.flatMap(g=>g.issues)]};for(const g of matches)clusters.splice(clusters.indexOf(g),1);clusters.push(group)}
  const safe=['stop','reduce-load'].includes(report.decision);
  const candidate=safe?null:issues.find(i=>i.action==='temporary-focus');
  const agenda=questionAgenda(m,issues,day);
