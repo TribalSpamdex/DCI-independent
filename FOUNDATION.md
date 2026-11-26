@@ -1,23 +1,20 @@
-# DCI Independent V0.2.0 — evidence, investigations and learning
+# DCI Independent V0.3.0 — unified specialist executive
 
-V0.0.7 and V0.1.0 remain recoverable in archive branches. V0.2.0 is model-free, uses no paid runtime service, and preserves DCI-independent:foundation:v1 player memory. The other darts apps are not touched. The site/ directory is deployed only after regression and browser verification.
+The previous working release is preserved at archive/v0.2.0. Model-free runtime, no paid APIs, unchanged app-specific storage key. Other darts apps remain untouched.
 
-## New intelligence
-- Eight competing investigation hypotheses, evidence for and against, seven structured follow-up questions, correction history, dated reported changes, same-context/protocol target distributions, and matched within-week readiness comparisons.
-- Practice exposure comparison across the actual benchmark windows; player confirmation of complete logging required before inferring a reduction. Recorded session minutes and manual exposure overlap conservatively using the larger total by date and skill; distinct overlapping logs may consequently be undercounted.
-- Nine interactive synthetic scenarios; their answers remain in memory only and the save-intervention control is disabled while viewing a simulation.
-- Deterministic English explanation of measured evidence, assumptions, questions, relevant principles and follow-up. Raw diagnostics remain expandable, not the main presentation. No language model or open-ended language comprehension.
-- Counterbalanced A/B experiments: one named variable, matched attempts, alternating order, six days and both orders required, discomfort stops experiment, personal outcome history and repeat warning. Paired outcomes do not prove causation or retention. Experiment retention is not automatically tracked; existing training-intervention retention is separate.
-- 25 practice drill definitions, history-aware selection, up to three sequential planned sessions/day, manually logged actual completed minutes. Beginner variants remain identical at levels 1 and 2. No full timed drill execution or automatic dart capture. Some easiest variants repeat.
-- Measurable goals against fixed protocol/context, repeated-day target evaluation; player finishing preference, legal checkout, actual-dart recovery, double-in, bust and opponent finish availability. Tactical ordering is a heuristic, not a calibrated win probability.
-- 24 knowledge entries total: nine new research/professional sources checked against accessible text. Prior knowledge entries retained, not all re-audited. Coaching anecdotes and commercial material labelled separately from empirical evidence. No proprietary routines copied.
-- Backward-compatible validation of new records, stale-window write protection and scoped versioned assets using import map. Browser storage is not a durable backup. Cross-window checks reduce but do not eliminate simultaneous-write races.
+## New architecture
+- clinic: 16 structured technical observation domains with method, dates, contradictory observations and conservative safety flags. No automated video measurement or mechanical diagnosis.
+- strategy: goal-aware prioritisation, related issue clustering, question ordering and suppression of unknown answers for seven days; personalised outcome ledger. Priority is an ordinal policy, not scientific probability or causal proof.
+- executive and verification: coordinated evidence selection, 84-day current analysis window, independently checked decision, consent and 60-minute plan invariants, safety fallback, exact-proposal revalidation and pauses for new conflicting evidence during accepted interventions.
+- followup: delayed benefit relative to the existing A condition and transfer to distinct matched tasks after a favourable experiment. Transfer baselines must be dated before the experiment; recordings may be retrospective, and confounding still matters. No causal conclusion or automatic neural retraining.
+- equipment-profile: dated reported setup snapshots across ten characteristics; distinguish changed, unchanged and missing specifications, no purchase recommendations.
+- target-analysis: paired-day target accuracy, expected credited points on recorded targets and recurrent angular-neighbour miss comparisons. No physical coordinate dispersion or calibrated prediction.
+- match: validated actual-segment visit records, double-in/out and bust handling, match-specific scoring, first-nine and checkout-visit evidence. Per-dart finishing accuracy only from explicit aims; actual-thrown-dart average convention is labelled. Abandoned legs excluded. Derived match evidence remains investigative rather than eligible for focused intervention, since proposal baselines are not yet materialised.
+- knowledge: 36 structured entries, including 12 new source-checked research summaries. No universal mechanics or causal inference from scores.
+- 12 isolated demonstration scenarios, readable prioritised questions and evidence, development review, local history, versioned offline assets. No conversation model.
 
-## Confirmation safeguard
-A noisy synthetic population exposed unnecessary focus on stable and recovered players. New recent-subperiod and persistent-window confirmation gates reduce premature workload changes. Thresholds are provisional and scenario-dependent; investigation can still be appropriate even when focus is not. A separate seeded 10,000-player holdout is included in regression.
-
-## Tests
-node --test tests/foundation.test.mjs. Browser: serve site/ on port 8765 and run python tests/browser.py (Chromium), DCI_BROWSER=webkit python tests/browser.py (WebKit). New seeded scenarios add 1,000 short diagnostic profiles to the prior 1,000 one-year and 500 two-year synthetic player histories. These are simulations of decision logic, not full daily play or efficacy proof.
+## Test policy
+Node regression and population tests; Chromium and WebKit browser verification (WebKit uses stopped local origin for offline checks). Previous 10,000 noisy-player regression retained; additional 300 two-year three-skill histories test integrated decision invariants. Simulation does not establish real coaching effectiveness or actual iPhone performance.
 
 ## Outstanding
-No natural conversational language model, comprehensive automatic technical diagnosis, calibrated statistical confidence, verified universal difficulty standards, full motor biomechanics measurement, or full game execution. The six-day/other sample thresholds are provisional engineering policies. The actual iPhone must be tested again after release; desktop WebKit is not iOS Safari. No clinical diagnosis; stop aggravating activity and seek appropriate care when needed.
+No full timed game execution, automatic video/throw detection, calibrated statistical probabilities, full opponent strategy, durable cross-device synchronisation or natural-language conversation. Match logs are manual and their scoring convention may differ from external scoring services. Technical observation records are self-entered, even when based on video. Current strategy thresholds, evidence windows and safety recency policies are provisional. Historical results can be confounded. Local storage capacity and actual iPhone stability require further testing. Back up player data. No migration of pre-V0.1 experimental records. Never clear unrelated site data.

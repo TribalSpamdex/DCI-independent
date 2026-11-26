@@ -787,4 +787,434 @@ knowledge.push(...[
     ]
   }
 ]);
+knowledge.push(...[
+  {
+    "id": "self-directed-feedback",
+    "skill": [
+      "scoring",
+      "firstNine",
+      "singles",
+      "doubles",
+      "checkout",
+      "trebles",
+      "bull",
+      "switching",
+      "setup",
+      "pressure",
+      "grouping"
+    ],
+    "principle": "Let the player request selected performance feedback rather than force feedback after every throw.",
+    "level": "cross-task meta-analysis",
+    "source": "Self-Controlled Feedback and Behavioral Outcomes in Motor Skill Learning (2025)",
+    "url": "https://pubmed.ncbi.nlm.nih.gov/41009321/",
+    "support": "Retention and transfer benefits reported across motor tasks.",
+    "conditions": [
+      "Relevant individual concern and matched measurement"
+    ],
+    "contraindications": [
+      "Pain; unsupported major changes"
+    ],
+    "alternatives": [
+      "Maintain current approach",
+      "Collect comparable evidence"
+    ],
+    "investigation": "Record baseline and assess individual outcomes, including delayed tests where appropriate.",
+    "intervention": "Compare requested feedback against the usual schedule on a later common benchmark.",
+    "expected": "Better informed individual decision, not guaranteed improvement.",
+    "limitations": "No universal feedback frequency or individual darts effect established.",
+    "related": [
+      "retention",
+      "challenge-point"
+    ]
+  },
+  {
+    "id": "interleaving-retention",
+    "skill": [
+      "scoring",
+      "firstNine",
+      "singles",
+      "doubles",
+      "checkout",
+      "trebles",
+      "bull",
+      "switching",
+      "setup",
+      "pressure",
+      "grouping"
+    ],
+    "principle": "Interleaved practice can support delayed learning, even when practice itself feels harder.",
+    "level": "cross-task meta-analysis",
+    "source": "High contextual interference improves retention in motor learning (2024)",
+    "url": "https://pubmed.ncbi.nlm.nih.gov/38987617/",
+    "support": "Retention benefit particularly evident in laboratory research.",
+    "conditions": [
+      "Relevant individual concern and matched measurement"
+    ],
+    "contraindications": [
+      "Pain; unsupported major changes"
+    ],
+    "alternatives": [
+      "Maintain current approach",
+      "Collect comparable evidence"
+    ],
+    "investigation": "Record baseline and assess individual outcomes, including delayed tests where appropriate.",
+    "intervention": "Compare blocked and varied schedules on the same delayed assessment.",
+    "expected": "Better informed individual decision, not guaranteed improvement.",
+    "limitations": "Applied sports transfer less certain; do not force random practice on every beginner.",
+    "related": [
+      "practice-interference-caution",
+      "challenge-point"
+    ]
+  },
+  {
+    "id": "learning-performance",
+    "skill": [
+      "scoring",
+      "firstNine",
+      "singles",
+      "doubles",
+      "checkout",
+      "trebles",
+      "bull",
+      "switching",
+      "setup",
+      "pressure",
+      "grouping"
+    ],
+    "principle": "Distinguish immediate practice performance from learning retained after a delay.",
+    "level": "integrative review",
+    "source": "Soderstrom and Bjork (2015), Learning Versus Performance",
+    "url": "https://doi.org/10.1177/1745691615569000",
+    "support": "Review distinguishes short-term performance and durable learning.",
+    "conditions": [
+      "Relevant individual concern and matched measurement"
+    ],
+    "contraindications": [
+      "Pain; unsupported major changes"
+    ],
+    "alternatives": [
+      "Maintain current approach",
+      "Collect comparable evidence"
+    ],
+    "investigation": "Record baseline and assess individual outcomes, including delayed tests where appropriate.",
+    "intervention": "Keep delayed retention and transfer measures separate from immediate drill success.",
+    "expected": "Better informed individual decision, not guaranteed improvement.",
+    "limitations": "Not a precise darts-specific effect size.",
+    "related": [
+      "retention",
+      "context"
+    ]
+  },
+  {
+    "id": "release-coordination",
+    "skill": [
+      "scoring",
+      "singles",
+      "doubles",
+      "trebles",
+      "bull",
+      "grouping"
+    ],
+    "principle": "Investigate release as a coordinated system rather than an isolated wrist or elbow fault.",
+    "level": "darts biomechanics study",
+    "source": "Coordination of human movements resulting in motor strategies exploited by skilled players during a throwing task (2019)",
+    "url": "https://pubmed.ncbi.nlm.nih.gov/31622399/",
+    "support": "Skilled strategies differed in release kinematic parameters and their relationships.",
+    "conditions": [
+      "Relevant individual concern and matched measurement"
+    ],
+    "contraindications": [
+      "Pain; unsupported major changes"
+    ],
+    "alternatives": [
+      "Maintain current approach",
+      "Collect comparable evidence"
+    ],
+    "investigation": "Record baseline and assess individual outcomes, including delayed tests where appropriate.",
+    "intervention": "Compare comfortable motion at the same target; use observations before considering changes.",
+    "expected": "Better informed individual decision, not guaranteed improvement.",
+    "limitations": "Group kinematic differences do not establish the best technique for this player.",
+    "related": [
+      "motor-strategies",
+      "timing-compensation"
+    ]
+  },
+  {
+    "id": "joint-torque",
+    "skill": [
+      "scoring",
+      "singles",
+      "doubles",
+      "trebles",
+      "bull",
+      "grouping"
+    ],
+    "principle": "Joint interactions differ with skill; a visible joint movement is not itself a defect.",
+    "level": "darts biomechanics study",
+    "source": "Contribution of interaction torques during dart throwing (2017)",
+    "url": "https://pubmed.ncbi.nlm.nih.gov/28919168/",
+    "support": "Inverse dynamics found differences in expert and novice torque patterns.",
+    "conditions": [
+      "Relevant individual concern and matched measurement"
+    ],
+    "contraindications": [
+      "Pain; unsupported major changes"
+    ],
+    "alternatives": [
+      "Maintain current approach",
+      "Collect comparable evidence"
+    ],
+    "investigation": "Record baseline and assess individual outcomes, including delayed tests where appropriate.",
+    "intervention": "Use whole-throw observation instead of enforcing a universal joint position.",
+    "expected": "Better informed individual decision, not guaranteed improvement.",
+    "limitations": "Laboratory motion capture and inverse dynamics are not available from segment outcomes.",
+    "related": [
+      "release-coordination",
+      "miss-direction"
+    ]
+  },
+  {
+    "id": "fatigue-mental",
+    "skill": [
+      "scoring",
+      "firstNine",
+      "singles",
+      "doubles",
+      "checkout",
+      "trebles",
+      "bull",
+      "switching",
+      "setup",
+      "pressure",
+      "grouping"
+    ],
+    "principle": "Consider mental fatigue as a possible contextual influence on accuracy.",
+    "level": "darts experimental study",
+    "source": "The effects of mental fatigue on fine motor performance in humans (2024)",
+    "url": "https://pubmed.ncbi.nlm.nih.gov/38489786/",
+    "support": "The mental-fatigue intervention group showed reduced throwing performance.",
+    "conditions": [
+      "Relevant individual concern and matched measurement"
+    ],
+    "contraindications": [
+      "Pain; unsupported major changes"
+    ],
+    "alternatives": [
+      "Maintain current approach",
+      "Collect comparable evidence"
+    ],
+    "investigation": "Record baseline and assess individual outcomes, including delayed tests where appropriate.",
+    "intervention": "Record comparable normal and fatigued days; offer rest rather than technical change when justified.",
+    "expected": "Better informed individual decision, not guaranteed improvement.",
+    "limitations": "Experimental induction does not identify a particular player's fatigue or cause.",
+    "related": [
+      "context",
+      "retention"
+    ]
+  },
+  {
+    "id": "fatigue-muscular",
+    "skill": [
+      "scoring",
+      "singles",
+      "doubles",
+      "trebles",
+      "bull",
+      "grouping"
+    ],
+    "principle": "Fatigue may change movement variability as well as accuracy.",
+    "level": "darts experimental study",
+    "source": "The Effect of Mental and Muscular Fatigue on Movement Variability in Dart Throwing (2026)",
+    "url": "https://pubmed.ncbi.nlm.nih.gov/42248431/",
+    "support": "Motion-capture investigation of fatigue and motor variability in novice throwers.",
+    "conditions": [
+      "Relevant individual concern and matched measurement"
+    ],
+    "contraindications": [
+      "Pain; unsupported major changes"
+    ],
+    "alternatives": [
+      "Maintain current approach",
+      "Collect comparable evidence"
+    ],
+    "investigation": "Record baseline and assess individual outcomes, including delayed tests where appropriate.",
+    "intervention": "Separate late-practice observations from the comfortable baseline.",
+    "expected": "Better informed individual decision, not guaranteed improvement.",
+    "limitations": "28 participants without regular darts experience; no diagnostic rule for experts.",
+    "related": [
+      "fatigue-mental",
+      "release-coordination"
+    ]
+  },
+  {
+    "id": "dart-flight",
+    "skill": [
+      "scoring",
+      "singles",
+      "doubles",
+      "trebles",
+      "bull",
+      "grouping"
+    ],
+    "principle": "Dart flight orientation can depend on release and aerodynamic stability together.",
+    "level": "darts experimental and theoretical study",
+    "source": "Experimental validation of dynamic stability analysis applied to dart flight (2018)",
+    "url": "https://doi.org/10.1007/s12283-018-0279-9",
+    "support": "High-speed trajectories and a stability model describe oscillation during flight.",
+    "conditions": [
+      "Relevant individual concern and matched measurement"
+    ],
+    "contraindications": [
+      "Pain; unsupported major changes"
+    ],
+    "alternatives": [
+      "Maintain current approach",
+      "Collect comparable evidence"
+    ],
+    "investigation": "Record baseline and assess individual outcomes, including delayed tests where appropriate.",
+    "intervention": "Record entry angle and setup separately; test one equipment change under matched conditions.",
+    "expected": "Better informed individual decision, not guaranteed improvement.",
+    "limitations": "No universal ideal entry angle or evidence that a given stem length fixes a throw.",
+    "related": [
+      "equipment-isolation",
+      "release-coordination"
+    ]
+  },
+  {
+    "id": "warmup-calibration",
+    "skill": [
+      "scoring",
+      "firstNine",
+      "singles",
+      "doubles",
+      "checkout",
+      "trebles",
+      "bull",
+      "switching",
+      "setup",
+      "pressure",
+      "grouping"
+    ],
+    "principle": "Use a consistent warm-up before interpreting a benchmark.",
+    "level": "darts and hammering experimental research",
+    "source": "The perils of the first try: experimental evidence for visuomotor calibration (2025)",
+    "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12283878/",
+    "support": "Research describes rapid task calibration and performance changes following interruptions.",
+    "conditions": [
+      "Relevant individual concern and matched measurement"
+    ],
+    "contraindications": [
+      "Pain; unsupported major changes"
+    ],
+    "alternatives": [
+      "Maintain current approach",
+      "Collect comparable evidence"
+    ],
+    "investigation": "Record baseline and assess individual outcomes, including delayed tests where appropriate.",
+    "intervention": "Record whether the benchmark follows the normal warm-up and use matched conditions.",
+    "expected": "Better informed individual decision, not guaranteed improvement.",
+    "limitations": "Does not establish a universal ten-minute warm-up duration.",
+    "related": [
+      "context",
+      "retention"
+    ]
+  },
+  {
+    "id": "individual-aiming",
+    "skill": [
+      "scoring",
+      "trebles",
+      "switching"
+    ],
+    "principle": "Expected scoring depends on the player's distribution of dart outcomes.",
+    "level": "darts mathematical research",
+    "source": "Tibshirani, Price and Taylor (2011), A statistician plays darts",
+    "url": "https://doi.org/10.1111/j.1467-985X.2010.00651.x",
+    "support": "Personalised aiming models can favour different locations for different error distributions.",
+    "conditions": [
+      "Relevant individual concern and matched measurement"
+    ],
+    "contraindications": [
+      "Pain; unsupported major changes"
+    ],
+    "alternatives": [
+      "Maintain current approach",
+      "Collect comparable evidence"
+    ],
+    "investigation": "Record baseline and assess individual outcomes, including delayed tests where appropriate.",
+    "intervention": "Compare measured outcomes for T20, T19 and other targets; do not assume T20 is always best.",
+    "expected": "Better informed individual decision, not guaranteed improvement.",
+    "limitations": "Segment counts are not the two-dimensional Gaussian heat-map model in the paper.",
+    "related": [
+      "route-preference",
+      "context"
+    ]
+  },
+  {
+    "id": "opponent-strategy",
+    "skill": [
+      "checkout",
+      "setup",
+      "scoring",
+      "pressure"
+    ],
+    "principle": "Opponent score can matter to tactical choices when individual skill models are available.",
+    "level": "darts operations research",
+    "source": "Haugh and Wang (2022), Play Like the Pros?",
+    "url": "https://doi.org/10.1287/ijoc.2022.1197",
+    "support": "Dynamic game formulation estimates individual skill models and strategic effects.",
+    "conditions": [
+      "Relevant individual concern and matched measurement"
+    ],
+    "contraindications": [
+      "Pain; unsupported major changes"
+    ],
+    "alternatives": [
+      "Maintain current approach",
+      "Collect comparable evidence"
+    ],
+    "investigation": "Record baseline and assess individual outcomes, including delayed tests where appropriate.",
+    "intervention": "Distinguish immediate finish likelihood from setup value and opponent opportunities.",
+    "expected": "Better informed individual decision, not guaranteed improvement.",
+    "limitations": "Current engine does not implement the paper's full zero-sum game or professional skill models.",
+    "related": [
+      "route-preference",
+      "individual-aiming"
+    ]
+  },
+  {
+    "id": "release-difficulty-boundary",
+    "skill": [
+      "scoring",
+      "singles",
+      "doubles",
+      "trebles",
+      "bull",
+      "grouping"
+    ],
+    "principle": "Persistent involuntary difficulty releasing a dart requires care, not an automatic technical prescription.",
+    "level": "darts exploratory case-control research",
+    "source": "Kinematic and neurophysiological characteristics of dart throwing in skilled dart players with yips (2026)",
+    "url": "https://doi.org/10.1186/s13102-026-02266-8",
+    "support": "Study compared ten skilled players with yips and twelve without.",
+    "conditions": [
+      "Relevant individual concern and matched measurement"
+    ],
+    "contraindications": [
+      "Pain; unsupported major changes"
+    ],
+    "alternatives": [
+      "Maintain current approach",
+      "Collect comparable evidence"
+    ],
+    "investigation": "Record baseline and assess individual outcomes, including delayed tests where appropriate.",
+    "intervention": "Avoid diagnosing from a score or observation; suggest qualified assessment for persistent release difficulty.",
+    "expected": "Better informed individual decision, not guaranteed improvement.",
+    "limitations": "Small observational comparison; no established cure or diagnostic algorithm.",
+    "related": [
+      "release-coordination",
+      "context"
+    ]
+  }
+]);
 export function relevant(skill){return knowledge.filter(x=>x.skill.includes(skill))}
