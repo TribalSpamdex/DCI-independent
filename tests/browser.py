@@ -14,6 +14,17 @@ with sync_playwright() as p:
     assert page.locator("#facts").inner_text().find("middle")>=0
     page.reload()
     assert page.locator("#facts").inner_text().find("middle")>=0
+    page.locator("#coach-ask input").fill("Checkout 81 with 2 darts")
+    page.locator("#coach-ask button").click()
+    assert "legal finish" in page.locator("#coach-response").inner_text()
+    page.locator("#coach-ask input").fill("How am I doing?")
+    page.locator("#coach-ask button").click()
+    assert "Maintain balanced practice" in page.locator("#coach-response").inner_text()
+    page.locator("#integration-demo").click()
+    assert "Imported records: 14" in page.locator("#integration-result").inner_text()
+    assert "Duplicate retry records ignored: 14" in page.locator("#integration-result").inner_text()
+    assert "temporary-focus" in page.locator("#integration-result").inner_text()
+    assert "Verification: passed" in page.locator("#integration-result").inner_text()
     page.locator("#demo").click()
     assert "SIMULATION ONLY" in page.locator("#report").inner_text()
     assert "temporary-focus" in page.locator("#report").inner_text()
@@ -21,6 +32,8 @@ with sync_playwright() as p:
     assert "20%" in page.locator("#report").inner_text()
     assert page.locator("#propose").is_disabled()
     page.locator("#scenario").select_option("equipment")
+    assert "Scenario selected" in page.locator("#report").inner_text()
+    assert "temporary-focus" not in page.locator("#report").inner_text()
     page.locator("#demo").click()
     assert "Decision: investigate" in page.locator("#report").inner_text()
     page.locator("#scenario").select_option("pain")
@@ -144,7 +157,7 @@ with sync_playwright() as p:
     if os.getenv("DCI_BROWSER")=="webkit":
         # Playwright issue #42775: set_offline can reject service-worker responses
         # even when the worker returns literal HTML. Stop the actual local origin.
-        assert page.evaluate("caches.open('DCI-independent:foundation:0.3.0').then(c=>c.match('./index.html')).then(Boolean)")
+        assert page.evaluate("caches.open('DCI-independent:foundation:0.4.0').then(c=>c.match('./index.html')).then(Boolean)")
         pid=int(os.environ["DCI_SERVER_PID"])
         os.kill(pid,signal.SIGTERM)
         for _ in range(50):
@@ -155,7 +168,7 @@ with sync_playwright() as p:
             time.sleep(.1)
         else:
             raise AssertionError("Local origin did not stop")
-        page.goto("http://127.0.0.1:8765/index.html?v=0.3.0&offline-test=1")
+        page.goto("http://127.0.0.1:8765/index.html?v=0.4.0&offline-test=1")
     else:
         ctx.set_offline(True)
         page.reload()
