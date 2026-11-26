@@ -8,6 +8,7 @@ import {resolvePriorities,developmentReview} from './strategy.mjs';
 import {combinedExposure} from './goals.mjs';
 import {currentPlan} from './interventions.mjs';
 import {knowledge} from './knowledge.mjs';
+import {enforceDecision} from './verification.mjs';
 import {followupReview} from './followup.mjs';
 import {legEvidence,legSummary} from './match.mjs';
 import {targetComparison,directionReview} from './target-analysis.mjs';
@@ -63,7 +64,7 @@ export function fullReport(m,day){
  // Use complete history for progress and learning, never pool unlike benchmarks.
  const development=developmentReview({...m,observations},report,day);
  const active=verifiedPlan(m,report,day);
- return {...report,development,active,match:legSummary(m,day),learning:(m.trials??[]).filter(t=>t.status==='completed'&&t.pairs.every(p=>p.day<=day)).map(t=>({id:t.id,skill:t.skill,approach:t.approach,reviews:followupReview(m,t,day)})),trace:{decision:report.decision,primary:report.strategy.primary,safetyFlags:safety.flags,issues:report.issues.map(i=>({skill:i.skill,protocol:i.protocol,context:i.context,action:i.action,confirmation:i.confirmation?.status,veto:i.investigation?.veto??null,priorOutcome:i.strategy?.ledger?.policy??null})),policy:'Deterministic decision trace; no scientific probability assigned.'}};
+ return enforceDecision(m,{...report,development,active,match:legSummary(m,day),learning:(m.trials??[]).filter(t=>t.status==='completed'&&t.pairs.every(p=>p.day<=day)).map(t=>({id:t.id,skill:t.skill,approach:t.approach,reviews:followupReview(m,t,day)})),trace:{decision:report.decision,primary:report.strategy.primary,safetyFlags:safety.flags,issues:report.issues.map(i=>({skill:i.skill,protocol:i.protocol,context:i.context,action:i.action,confirmation:i.confirmation?.status,veto:i.investigation?.veto??null,priorOutcome:i.strategy?.ledger?.policy??null})),policy:'Deterministic decision trace; no scientific probability assigned.'}});
 }
 export function verifiedPlan(m,report,day){
  const active=currentPlan(m,report,day);
@@ -80,6 +81,6 @@ export function verifiedPlan(m,report,day){
 export function canAccept(m,i,day){
  const report=fullReport(m,day);
  if(i.status!=='proposed'||dayGap(i.proposedDay,day)<0||dayGap(i.proposedDay,day)>7)return {allowed:false,reason:'Proposal is stale or no longer awaiting consent.'};
- if(report.decision!=='temporary-focus'||!report.issues.some(x=>same(x,i)&&x.action==='temporary-focus'))return {allowed:false,reason:'New evidence no longer supports this focus. Reassess before accepting.'};
+ if(report.decision!=='temporary-focus'||!same(report.strategy.primary??{},i)||!report.issues.some(x=>same(x,i)&&x.action==='temporary-focus'))return {allowed:false,reason:'New evidence no longer supports this focus. Reassess before accepting.'};
  return {allowed:true,reason:'Current evidence still supports consideration of this focus.'};
 }
