@@ -9,9 +9,10 @@ import {recordAnswer} from './diagnosis.mjs';
 import {recordReadiness,dayValid} from './context.mjs';
 import {recordLeg} from './match.mjs';
 import {appendThrow} from './target-evidence.mjs';
+import {nextActions} from './next-actions.mjs';
 import {propose,respond} from './interventions.mjs';
 export const CONTRACT_VERSION=1;
-export const QUERIES=Object.freeze(['review','training','checkout','memory-summary']);
+export const QUERIES=Object.freeze(['review','training','checkout','memory-summary','next-actions']);
 export const COMMANDS=Object.freeze(['observation','throw','leg','session','readiness','answer','fact','propose','respond']);
 const copy=x=>JSON.parse(JSON.stringify(x));
 function requireDay(day){if(!dayValid(day))throw Error('Invalid local date');}
@@ -25,6 +26,7 @@ export function query(raw,req){
  if(req.type==='checkout'){shape(p,['score','darts','actual','doubleIn','opened','context','protocol','opponent']);return {version:1,engine:VERSION,type:req.type,result:advice(m,p)}}
  if(req.type==='memory-summary'){shape(p,[]);return {version:1,engine:VERSION,type:req.type,result:{facts:currentFacts(m),observations:m.observations.length,throws:m.throws.length,legs:m.legs.length,sessions:m.sessions.length,interventions:m.interventions.length}}}
  const report=fullReport(m,day);
+ if(req.type==='next-actions'){shape(p,[]);return {version:1,engine:VERSION,type:req.type,result:nextActions(m,day,report)}}
  if(req.type==='training'){shape(p,['number']);const plan=trainingRecommendation(m,report,day,report.active,p.number??1);return {version:1,engine:VERSION,type:req.type,result:plan}}
  shape(p,[]);
  const readable=explainReport(report,m);
