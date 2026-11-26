@@ -5,11 +5,11 @@ const scoring=s=>['scoring','firstNine'].includes(s);
 const fmt=n=>Number.isFinite(n)?Number(n.toFixed(1)).toString():'Not available';
 const value=(skill,n)=>Number.isFinite(n)?fmt(scoring(skill)?n:n*100)+(scoring(skill)?' average':'%'):'Not available';
 export function relevantPrinciples(issue,m){
- const ids=new Set(['context','retention']);
+ const ids=new Set(['context','retention','learning-performance']);
  const hypotheses=issue.investigation?.hypotheses??[];
  for(const h of hypotheses){
  if(h.status==='unresolved'||h.status==='less-supported')continue;
- const map={practice:['challenge-point','professional-doubles-bunting','coach-balanced-routine'],fatigue:['coach-balanced-routine'],pressure:['professional-pressure','pre-performance-routine'],confidence:['process-goals','pre-performance-routine'],equipment:['equipment-isolation','single-variable'],technique:['motor-strategies','darts-focus-review','single-variable'],target:['miss-direction','professional-doubles-bunting'],measurement:['context']};
+ const map={practice:['challenge-point','professional-doubles-bunting','coach-balanced-routine'],fatigue:['coach-balanced-routine','fatigue-mental','fatigue-muscular'],pressure:['professional-pressure','pre-performance-routine'],confidence:['process-goals','pre-performance-routine','self-directed-feedback'],equipment:['equipment-isolation','single-variable','dart-flight'],technique:['motor-strategies','darts-focus-review','single-variable','release-coordination','joint-torque'],target:['miss-direction','professional-doubles-bunting'],measurement:['context']};
  for(const id of map[h.id]??[])ids.add(id);
  }
  return knowledge.filter(k=>ids.has(k.id)&&k.skill.includes(issue.skill)).map(k=>({id:k.id,principle:k.principle,application:k.intervention,limitation:k.limitations,sourceType:k.level}));
