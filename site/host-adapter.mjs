@@ -3,7 +3,8 @@ import {command,batch,query} from './coach-api.mjs';
 import {dayValid} from './context.mjs';
 import {SKILLS,validObservation} from './engine.mjs';
 const allowed=/^[A-Za-z0-9_-]{1,32}$/;
-function eventIdentity(source,id){if(!allowed.test(source)||!allowed.test(id)||typeof source!=='string'||typeof id!=='string')throw Error('Invalid host source or event identity');return 'host:'+source+':'+id;}
+const eventAllowed=/^[A-Za-z0-9_-]{1,60}$/;
+function eventIdentity(source,id){if(!allowed.test(source)||!eventAllowed.test(id)||typeof source!=='string'||typeof id!=='string')throw Error('Invalid host source or event identity');return 'host:'+source+':'+id;}
 const shape=(o,fields)=>{if(!o||typeof o!=='object'||Array.isArray(o)||Object.keys(o).some(k=>!fields.includes(k)))throw Error('Unsupported host event fields')};
 export function benchmarkEvent(source,event){
  shape(event,['eventId','day','skill','context','protocol','attempts','hits']);
@@ -38,4 +39,18 @@ export function integrationExample(day){
  const report=query(b.state,{version:1,type:'review',day,payload:{}}).result;
  const session=query(b.state,{version:1,type:'training',day,payload:{number:1}}).result;
  return {imported:a.imported,retried:b.duplicates,total:b.state.observations.length,decision:report.decision,focus:report.focus,trainingMinutes:session.segments.reduce((n,g)=>n+g.minutes,0),verification:report.verification.status};
+}
+
+export function parseHostExport(text){
+ if(typeof text!=='string'||!text.length||text.length>250000)throw Error('Invalid or oversized host export');
+ let data;try{data=JSON.parse(text)}catch{throw Error('Host export must be valid JSON')}
+ shape(data,['format','version','source','events']);
+ if(data.format!=='DCI-benchmark-events'||data.version!==1||typeof data.source!=='string'||!allowed.test(data.source)||!Array.isArray(data.events)||!data.events.length||data.events.length>200)throw Error('Unsupported benchmark export');
+ for(const event of data.events)benchmarkEvent(data.source,event);
+ return {format:data.format,version:data.version,source:data.source,events:data.events};
+}
+export function previewHostExport(memory,text,day){
+ const data=parseHostExport(text),result=importBenchmarks(memory,data.source,data.events,day,{confirmed:true});
+ const scopes=[...new Set(data.events.map(e=>e.skill+' • '+e.context+' • '+e.protocol))];
+ return {data,imported:result.imported,duplicates:result.duplicates,scopes};
 }
