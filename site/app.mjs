@@ -19,6 +19,7 @@ import {DOMAINS,OBSERVATIONS,CONDITIONS,METHODS,recordClinic,clinicReview} from 
 import {SETUP_FIELDS,recordSetup,setupComparison} from './equipment-profile.mjs';
 import {recordFollowup,followupReview} from './followup.mjs';
 import {fullReport,canAccept} from './executive.mjs';
+import {targetComparison,scoringComparison,directionReview} from './target-analysis.mjs';
 const KEY='DCI-independent:foundation:v1';
 const $=id=>document.getElementById(id);
 let memory=emptyMemory(),blocked=false,simulation=null,reportMode='none',planned=null,rawSnapshot=null;
@@ -59,7 +60,7 @@ form('difficulty',d=>persist(recordDifficulty(memory,{...d,id:crypto.randomUUID(
 form('equipment',(d,f)=>{const changed=new FormData(f).getAll('changed'),result=equipmentInvestigation({changed,discomfort:f.elements.discomfort.checked,measuredDecline:f.elements.measuredDecline.checked});$('equipment-report').replaceChildren(el('p',result.action));details($('equipment-report'),'Competing explanations',result)});
 function renderExtra(){for(const [id,key] of [['readiness-history','readiness'],['difficulty-history','difficulty']]){const p=$(id),rows=memory[key]??[];p.replaceChildren(el('p',rows.length+' recorded entries'));for(const row of rows.slice(-10).reverse()){const item=el('div','');details(item,row.day+' • '+(row.skill??row.context),row);item.append(button('Remove',()=>{if(confirm('Remove this entry?'))persist({...memory,[key]:(memory[key]??[]).filter(x=>key==='readiness'?x.day!==row.day||x.context!==row.context:x.id!==row.id)})}));p.append(item)}}}
 function decisionFor(m,day){return fullReport(m,day)}
-function invalidate(){simulation=null;reportMode='none';planned=null;$('report').replaceChildren();$('session-plan').replaceChildren();$('propose').disabled=false}
+function invalidate(){simulation=null;reportMode='none';planned=null;$('report').replaceChildren();$('session-plan').replaceChildren();for(const id of ['development-report','clinic-result','setup-result','target-comparison'])$(id).replaceChildren();$('propose').disabled=false}
 function bullet(parent,items){if(!items.length)return;const ul=el('ul','');for(const item of items)ul.append(el('li',item));parent.append(ul)}
 function report(m,label,date=today()){
  const x=decisionFor(m,date),p=$('report'),active=x.active,readable=explainReport(x,m);
@@ -72,6 +73,8 @@ function report(m,label,date=today()){
  const investigation=el('details','');investigation.append(el('summary','Investigate '+raw.skill+' ('+raw.context+')'));for(const h of i.hypotheses){investigation.append(el('h3',h.title),el('p',h.statusLabel));bullet(investigation,h.support.map(v=>'Supporting: '+v));bullet(investigation,h.against.map(v=>'Contrary: '+v));bullet(investigation,h.unknown.map(v=>'Unknown: '+v));investigation.append(el('p',h.next))}box.append(investigation);
  box.append(el('h3','Recommended next action'),el('p',x.decision==='stop'?'Normal practice is paused.':i.followUp));
  if(raw.strategy?.ledger?.blocked.length)box.append(el('p',raw.strategy.reason));
+ if(raw.targetEvidence&&raw.targetEvidence.status!=='insufficient')box.append(el('p','Matched target comparison: '+raw.targetEvidence.first+' / '+raw.targetEvidence.second+' • '+raw.targetEvidence.status.replaceAll('-',' ')));
+ if(raw.directions?.some(d=>d.status.endsWith('-pattern')))bullet(box,raw.directions.filter(d=>d.status.endsWith('-pattern')).map(d=>d.aim+' • '+d.status.replaceAll('-',' ')+' — '+d.action));
  if(raw.clinic?.priority&&x.decision!=='stop')box.append(el('p','Technical observation to investigate: '+raw.clinic.priority+'. '+raw.clinic.next));
  if(raw.actions.length){const opts=el('details','');opts.append(el('summary','Evidence-linked investigation options'));for(const a of raw.actions){opts.append(el('h3',a.title),el('p',a.why),el('p',a.condition));bullet(opts,a.sources.map(k=>k.principle+' Limit: '+k.limitation))}box.append(opts)}
  if(i.allocation?.earlier&&i.allocation?.recent){const a=i.allocation;box.append(el('p','Recorded practice for this skill: '+Math.round(a.earlier.perWeek??0)+' → '+Math.round(a.recent.perWeek??0)+' min/week. '+(a.status==='incomplete-logging'?'Completeness not confirmed.':a.status.replaceAll('-',' '))))}
@@ -98,6 +101,11 @@ function renderNew(){
  const answers=$('investigation-answers');answers.replaceChildren(el('p',(memory.answers??[]).length+' recorded investigation answers'));
  for(const [index,o] of (memory.answers??[]).map((o,index)=>[index,o]).slice(-20).reverse()){const row=el('p',o.day+' • '+o.skill+' • '+o.question+': '+o.answer+' ');row.append(button('Remove',()=>{if(confirm('Remove this answer?'))persist({...memory,answers:memory.answers.filter((_,i)=>i!==index)})}));answers.append(row)}
 }
+function comparisonData(){const d=Object.fromEntries(new FormData($('target-compare')));return {...d,day:today()}}
+function renderComparison(title,x){const p=$('target-comparison');p.replaceChildren(el('h3',title),el('p',x.status.replaceAll('-',' ')));if(x.estimates)bullet(p,x.estimates.map(e=>e.target+': '+(e.average===null?'Not available':e.average.toFixed(1)+' average')+' • '+e.attempts+' attempts'));if(x.recommendation)p.append(el('p','Observed scoring advantage: '+x.recommendation));if(x.action)p.append(el('p',x.action));if(x.pairedDays!==undefined)p.append(el('p',x.pairedDays+' comparable days'));if(Number.isFinite(x.delta))p.append(el('p','Observed difference: '+(x.delta*100).toFixed(1)+' percentage points'));p.append(el('p',x.limitation));details(p,'Measurement evidence',x)}
+form('target-compare',d=>renderComparison('Matched target accuracy',targetComparison(memory,{...d,day:today()})));
+$('compare-scoring').onclick=()=>run(()=>renderComparison('Scoring target comparison',scoringComparison(memory,comparisonData())));
+$('compare-direction').onclick=()=>run(()=>{const d=comparisonData();renderComparison('Directional evidence',directionReview(memory,{...d,aim:d.first}))});
 form('clinic',(d,f)=>persist(recordClinic(memory,{...d,id:crypto.randomUUID(),pain:f.elements.pain.checked})));
 $('clinic-review').onclick=()=>run(()=>{const d=Object.fromEntries(new FormData($('clinic'))),x=clinicReview(memory,d,today()),p=$('clinic-result');p.replaceChildren(el('h3',x.decision),el('p',x.next));for(const h of x.hypotheses.filter(h=>h.status!=='unresolved')){p.append(el('p',h.domain+' • '+h.status+' • '+h.days+' supporting days'));details(p,'Observation evidence',h)}});
 form('setup-profile',d=>persist(recordSetup(memory,{id:crypto.randomUUID(),day:d.day,name:d.name,comfort:d.comfort,values:Object.fromEntries(SETUP_FIELDS.map(key=>[key,d['setup:'+key]?.trim()]).filter(([,value])=>value))})));
